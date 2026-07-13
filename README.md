@@ -1,40 +1,28 @@
-# Shouyu Lai Personal Homepage
+# Shouyu Lai Apple Liquid Glass Homepage V3
 
-This package is ready for GitHub Pages.
+This version keeps the existing content and card interactions, with these changes:
 
-## Files
-
-- `index.html` — complete bilingual personal homepage
-- `assets/` — optimized web images
-- `Shouyu_Lai_CV.pdf` — initial one-page English CV used by the download button
+- Restores the native operating-system pointer
+- Enlarges the fixed title/navigation bar
+- Uses a dedicated live Gaussian `backdrop-filter` layer for the title bar
+- Excludes the title bar from SVG refraction so blur remains stable while content moves underneath
+- Increases blur strength after scrolling begins
+- Retains directional stretch and liquid refraction on content cards
+- Keeps dark/light mode, Chinese/English switching, responsive layout, image preview, email copy, CV download, and visitor count
 
 ## Deploy
 
-1. Create a public GitHub repository named `1aStIY.github.io`.
-2. Upload `index.html`, the `assets` folder, and `Shouyu_Lai_CV.pdf` to the repository root.
-3. Open repository **Settings → Pages**.
-4. Select **Deploy from a branch**, then choose `main` and `/ (root)`.
-5. Open `https://1aStIY.github.io/` after deployment.
+Upload every file in this folder to the root of the public repository:
 
-## Edit the site
+`1aStIY.github.io`
 
-Open `index.html` in a text editor. Search for these values:
+The repository root must contain:
 
-- `laishouyu078@gmail.com`
-- `https://github.com/1aStIY`
-- `4573 Lab`
-- `Beihang University`
+- `index.html`
+- `styles.css`
+- `liquid-glass.js`
+- `app.js`
+- `Shouyu_Lai_CV.pdf`
+- `assets/`
 
-The website contains:
-
-- responsive mobile layout
-- dark/light mode
-- Chinese/English switch
-- project cards and image preview
-- email copy button
-- GitHub link
-- CV download
-- visitor badge
-- lightweight scroll animations
-
-The visitor badge uses an external free counter. You can remove the `<div class="visitor-wrap">...</div>` block if you do not want a third-party page counter.
+After GitHub Pages deploys, hard refresh the page with `Ctrl + F5`.
