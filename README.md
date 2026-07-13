@@ -1,28 +1,43 @@
-# Shouyu Lai Apple Liquid Glass Homepage V3
+# Shouyu Lai — Apple Liquid Glass Homepage V4
 
-This version keeps the existing content and card interactions, with these changes:
+This package contains the complete GitHub Pages site.
 
-- Restores the native operating-system pointer
-- Enlarges the fixed title/navigation bar
-- Uses a dedicated live Gaussian `backdrop-filter` layer for the title bar
-- Excludes the title bar from SVG refraction so blur remains stable while content moves underneath
-- Increases blur strength after scrolling begins
-- Retains directional stretch and liquid refraction on content cards
-- Keeps dark/light mode, Chinese/English switching, responsive layout, image preview, email copy, CV download, and visitor count
+## V4 changes
 
-## Deploy
+- Native pointer remains unchanged
+- Critical CSS and the hero avatar are preloaded
+- A short loading cover prevents first-frame popping and delays heavy effects
+- Project images use lazy loading and asynchronous decoding
+- SVG liquid refraction is initialized lazily near the viewport
+- The fixed title bar keeps real-time Gaussian backdrop blur
+- The title bar now expands strongly toward the pointer and shows a moving optical focus lobe
+- CSS, JavaScript, and images use `?v=4.0.0` cache-busting parameters
 
-Upload every file in this folder to the root of the public repository:
+## Upload to GitHub Pages
 
-`1aStIY.github.io`
+Upload every file and the entire `assets` folder to the root of:
 
-The repository root must contain:
+`1aStlY/1aStlY.github.io`
+
+The repository root should contain:
 
 - `index.html`
 - `styles.css`
-- `liquid-glass.js`
 - `app.js`
+- `liquid-glass.js`
 - `Shouyu_Lai_CV.pdf`
 - `assets/`
 
-After GitHub Pages deploys, hard refresh the page with `Ctrl + F5`.
+After deployment, use `Ctrl + F5` once to bypass any older browser cache.
+
+
+## V5 changes
+
+- The four About cards now use a 2 × 2 layout on desktop and tablet.
+- Public-facing copy now emphasizes broad, system-level robotics experience:
+  mechanical design, electrical/embedded integration, control, reinforcement
+  learning, diffusion models, multi-robot systems, and hardware debugging.
+- The wording explicitly avoids claiming expert-level mastery of every area.
+- Research, skills, first-screen summary, and contact copy use the same
+  modest system-integration positioning.
+- Asset URLs use `v=5.0.0` to avoid old browser caches.

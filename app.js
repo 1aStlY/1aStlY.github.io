@@ -7,6 +7,7 @@
   const menuBtn = document.getElementById('menuBtn');
   const nav = document.getElementById('navlinks');
   const toast = document.getElementById('toast');
+  const loader = document.getElementById('pageLoader');
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const finePointer = window.matchMedia('(pointer: fine)').matches;
 
@@ -15,7 +16,7 @@
       try { return localStorage.getItem(key); } catch { return null; }
     },
     set(key, value) {
-      try { localStorage.setItem(key, value); } catch { /* no-op */ }
+      try { localStorage.setItem(key, value); } catch { /* storage can be disabled */ }
     }
   };
 
@@ -31,7 +32,8 @@
   function setTheme(theme) {
     html.dataset.theme = theme;
     storage.set('site-theme', theme);
-    document.querySelector('meta[name="theme-color"]').content = theme === 'dark' ? '#070b14' : '#edf4ff';
+    const themeMeta = document.querySelector('meta[name="theme-color"]');
+    if (themeMeta) themeMeta.content = theme === 'dark' ? '#070b14' : '#edf4ff';
   }
 
   function setLang(language) {
@@ -41,8 +43,13 @@
     storage.set('site-lang', language);
   }
 
-  themeBtn.addEventListener('click', () => setTheme(html.dataset.theme === 'dark' ? 'light' : 'dark'));
-  langBtn.addEventListener('click', () => setLang(html.dataset.lang === 'zh' ? 'en' : 'zh'));
+  themeBtn.addEventListener('click', () => {
+    setTheme(html.dataset.theme === 'dark' ? 'light' : 'dark');
+  });
+
+  langBtn.addEventListener('click', () => {
+    setLang(html.dataset.lang === 'zh' ? 'en' : 'zh');
+  });
 
   menuBtn.addEventListener('click', () => {
     const isOpen = nav.classList.toggle('open');
@@ -82,34 +89,45 @@
     });
   });
 
-  const revealObserver = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('visible');
-        revealObserver.unobserve(entry.target);
-      }
-    });
-  }, { threshold: 0.1 });
-  document.querySelectorAll('.reveal').forEach(element => revealObserver.observe(element));
+  function setupRevealAnimations() {
+    if (reducedMotion) {
+      document.querySelectorAll('.reveal').forEach(element => element.classList.add('visible'));
+      return;
+    }
 
-  const sections = [...document.querySelectorAll('main section[id]')];
-  const links = [...nav.querySelectorAll('a')];
-  const sectionObserver = new IntersectionObserver(entries => {
-    const visible = entries
-      .filter(entry => entry.isIntersecting)
-      .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
-    if (!visible) return;
-    links.forEach(anchor => {
-      anchor.classList.toggle('active', anchor.getAttribute('href') === `#${visible.target.id}`);
-    });
-  }, { rootMargin: '-35% 0px -55%', threshold: [0.01, 0.2, 0.5] });
-  sections.forEach(section => sectionObserver.observe(section));
+    const revealObserver = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '120px 0px' });
+
+    document.querySelectorAll('.reveal').forEach(element => revealObserver.observe(element));
+  }
+
+  function setupSectionNavigation() {
+    const sections = [...document.querySelectorAll('main section[id]')];
+    const links = [...nav.querySelectorAll('a')];
+    const sectionObserver = new IntersectionObserver(entries => {
+      const visible = entries
+        .filter(entry => entry.isIntersecting)
+        .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+      if (!visible) return;
+      links.forEach(anchor => {
+        anchor.classList.toggle('active', anchor.getAttribute('href') === `#${visible.target.id}`);
+      });
+    }, { rootMargin: '-32% 0px -58%', threshold: [0.01, 0.2, 0.5] });
+
+    sections.forEach(section => sectionObserver.observe(section));
+  }
 
   function initializeDirectionalStretch() {
     if (!finePointer || reducedMotion) return;
 
     const cards = document.querySelectorAll(
-      '.glass:not(.topbar):not(.status-pill):not(.liquid-cursor)'
+      '.glass:not(.topbar):not(.status-pill)'
     );
 
     cards.forEach(card => {
@@ -202,40 +220,188 @@
     });
   }
 
-  const lightbox = document.getElementById('lightbox');
-  const lightboxImage = document.getElementById('lightboxImg');
+  /**
+   * Directional top-bar flow.
+   * The transform origin is placed on the opposite side of the pointer,
+   * making the glass bar expand noticeably toward the hovered edge.
+   */
+  function initializeTopbarFlow() {
+    const topbar = document.querySelector('.topbar');
+    if (!topbar) return;
 
-  function closeLightbox() {
-    lightbox.classList.remove('open');
-    lightboxImage.src = '';
-    document.body.style.overflow = '';
+    const updateScrollState = () => {
+      topbar.classList.toggle('is-scrolled', window.scrollY > 18);
+    };
+    updateScrollState();
+    window.addEventListener('scroll', updateScrollState, { passive: true });
+
+    if (!finePointer || reducedMotion || window.matchMedia('(max-width: 780px)').matches) return;
+
+    const state = {
+      x: 0,
+      y: 0,
+      targetX: 0,
+      targetY: 0,
+      amount: 0,
+      targetAmount: 0,
+      running: false
+    };
+
+    function animate() {
+      state.x += (state.targetX - state.x) * 0.18;
+      state.y += (state.targetY - state.y) * 0.18;
+      state.amount += (state.targetAmount - state.amount) * 0.16;
+
+      const ax = Math.abs(state.x);
+      const ay = Math.abs(state.y);
+      const power = state.amount;
+
+      // Deliberately stronger than the content-card effect.
+      const scaleX = 1 + power * (0.028 + ax * 0.072 + ay * 0.012);
+      const scaleY = 1 + power * (0.045 + ay * 0.17 + ax * 0.025);
+      const translateX = state.x * power * 24;
+      const translateY = state.y * power * 10;
+      const rotateY = state.x * power * 3.1;
+      const rotateX = -state.y * power * 4.5;
+      const originX = 50 - state.x * 49;
+      const originY = 50 - state.y * 49;
+
+      topbar.style.transformOrigin = `${originX}% ${originY}%`;
+      topbar.style.transform = `perspective(1500px) translate3d(${translateX}px, ${translateY}px, 0) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scaleX(${scaleX}) scaleY(${scaleY})`;
+      topbar.style.setProperty('--bar-x', `${(state.x * 0.5 + 0.5) * 100}%`);
+      topbar.style.setProperty('--bar-y', `${(state.y * 0.5 + 0.5) * 100}%`);
+      topbar.style.setProperty('--bar-edge-x', String(state.x));
+      topbar.style.setProperty('--bar-edge-y', String(state.y));
+      topbar.style.setProperty('--bar-power', String(power));
+
+      const moving = Math.abs(state.targetX - state.x) > 0.0015
+        || Math.abs(state.targetY - state.y) > 0.0015
+        || Math.abs(state.targetAmount - state.amount) > 0.0015;
+
+      if (moving) {
+        requestAnimationFrame(animate);
+      } else {
+        state.running = false;
+        if (state.targetAmount === 0) {
+          topbar.style.removeProperty('transform-origin');
+          topbar.style.removeProperty('transform');
+          topbar.style.removeProperty('--bar-x');
+          topbar.style.removeProperty('--bar-y');
+          topbar.style.removeProperty('--bar-edge-x');
+          topbar.style.removeProperty('--bar-edge-y');
+          topbar.style.removeProperty('--bar-power');
+        }
+      }
+    }
+
+    function startAnimation() {
+      if (state.running) return;
+      state.running = true;
+      requestAnimationFrame(animate);
+    }
+
+    topbar.addEventListener('pointerenter', event => {
+      state.targetAmount = 1;
+      topbar.classList.add('is-flowing');
+      const rect = topbar.getBoundingClientRect();
+      state.targetX = Math.max(-1, Math.min(1, ((event.clientX - rect.left) / rect.width - 0.5) * 2));
+      state.targetY = Math.max(-1, Math.min(1, ((event.clientY - rect.top) / rect.height - 0.5) * 2));
+      startAnimation();
+    });
+
+    topbar.addEventListener('pointermove', event => {
+      const rect = topbar.getBoundingClientRect();
+      state.targetX = Math.max(-1, Math.min(1, ((event.clientX - rect.left) / rect.width - 0.5) * 2));
+      state.targetY = Math.max(-1, Math.min(1, ((event.clientY - rect.top) / rect.height - 0.5) * 2));
+      startAnimation();
+    }, { passive: true });
+
+    topbar.addEventListener('pointerleave', () => {
+      state.targetX = 0;
+      state.targetY = 0;
+      state.targetAmount = 0;
+      topbar.classList.remove('is-flowing');
+      startAnimation();
+    });
   }
 
-  document.querySelectorAll('[data-lightbox]').forEach(button => {
-    button.addEventListener('click', () => {
-      const image = button.querySelector('img');
-      lightboxImage.src = button.dataset.lightbox;
-      lightboxImage.alt = image?.alt || '';
-      lightbox.classList.add('open');
-      document.body.style.overflow = 'hidden';
+  function setupLightbox() {
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImage = document.getElementById('lightboxImg');
+    const closeButton = document.getElementById('closeLightbox');
+    if (!lightbox || !lightboxImage || !closeButton) return;
+
+    function closeLightbox() {
+      lightbox.classList.remove('open');
+      lightboxImage.src = '';
+      document.body.style.overflow = '';
+    }
+
+    document.querySelectorAll('[data-lightbox]').forEach(button => {
+      button.addEventListener('click', () => {
+        const image = button.querySelector('img');
+        lightboxImage.src = button.dataset.lightbox;
+        lightboxImage.alt = image?.alt || '';
+        lightbox.classList.add('open');
+        document.body.style.overflow = 'hidden';
+      });
     });
-  });
 
-  document.getElementById('closeLightbox').addEventListener('click', closeLightbox);
-  lightbox.addEventListener('click', event => {
-    if (event.target === lightbox) closeLightbox();
-  });
-  window.addEventListener('keydown', event => {
-    if (event.key === 'Escape') closeLightbox();
-  });
+    closeButton.addEventListener('click', closeLightbox);
+    lightbox.addEventListener('click', event => {
+      if (event.target === lightbox) closeLightbox();
+    });
+    window.addEventListener('keydown', event => {
+      if (event.key === 'Escape') closeLightbox();
+    });
+  }
 
-  // Strengthen the fixed Gaussian-glass title bar after the page begins scrolling.
-  const topbar = document.querySelector('.topbar');
-  const updateTopbarState = () => {
-    topbar?.classList.toggle('is-scrolled', window.scrollY > 18);
-  };
-  updateTopbarState();
-  window.addEventListener('scroll', updateTopbarState, { passive: true });
+  async function waitForCriticalResources() {
+    const minimumDisplayTime = 520;
+    const maximumWaitTime = 2600;
+    const startedAt = performance.now();
 
+    const criticalImages = [...document.querySelectorAll('[data-critical-image]')];
+    const imageTasks = criticalImages.map(image => {
+      if (image.complete && image.naturalWidth > 0) {
+        return typeof image.decode === 'function'
+          ? image.decode().catch(() => undefined)
+          : Promise.resolve();
+      }
+      return new Promise(resolve => {
+        image.addEventListener('load', resolve, { once: true });
+        image.addEventListener('error', resolve, { once: true });
+      });
+    });
+
+    const fontTask = document.fonts?.ready || Promise.resolve();
+    const resourcesReady = Promise.all([fontTask, ...imageTasks]);
+    const timeout = new Promise(resolve => window.setTimeout(resolve, maximumWaitTime));
+
+    await Promise.race([resourcesReady, timeout]);
+
+    const elapsed = performance.now() - startedAt;
+    const remaining = Math.max(0, minimumDisplayTime - elapsed);
+    if (remaining) await new Promise(resolve => window.setTimeout(resolve, remaining));
+  }
+
+  async function revealPage() {
+    await waitForCriticalResources();
+
+    requestAnimationFrame(() => {
+      window.clearTimeout(window.__loaderFailsafe);
+      html.classList.remove('is-loading');
+      html.classList.add('is-ready');
+      window.dispatchEvent(new CustomEvent('site:ready-for-effects'));
+
+      window.setTimeout(() => loader?.remove(), 760);
+    });
+  }
+
+  setupRevealAnimations();
+  setupSectionNavigation();
+  setupLightbox();
+  initializeTopbarFlow();
   initializeDirectionalStretch();
+  revealPage();
 })();

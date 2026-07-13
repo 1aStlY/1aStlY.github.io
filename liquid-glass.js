@@ -1,9 +1,9 @@
 /**
- * Liquid-glass refraction for content cards.
+ * Lazy liquid-glass refraction for content cards.
  *
- * The fixed navigation bar is intentionally excluded. It uses a dedicated
- * CSS backdrop-filter layer so text and images passing underneath remain
- * continuously and reliably Gaussian-blurred.
+ * Critical rendering is left to CSS Gaussian blur. SVG displacement filters
+ * are created only after the loader disappears and only for surfaces near the
+ * viewport, reducing startup work and scroll jank.
  */
 (() => {
   'use strict';
@@ -11,6 +11,8 @@
   const SVG_NS = 'http://www.w3.org/2000/svg';
   const XLINK_NS = 'http://www.w3.org/1999/xlink';
   const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
+  const initialized = new WeakSet();
+  let started = false;
 
   const smoothStep = (a, b, t) => {
     t = clamp((t - a) / (b - a), 0, 1);
@@ -36,11 +38,13 @@
       this.createRefractionLayer();
       this.refresh();
 
-      this.resizeObserver = new ResizeObserver(() => {
-        clearTimeout(this.resizeTimer);
-        this.resizeTimer = window.setTimeout(() => this.refresh(), 80);
-      });
-      this.resizeObserver.observe(this.element);
+      if ('ResizeObserver' in window) {
+        this.resizeObserver = new ResizeObserver(() => {
+          clearTimeout(this.resizeTimer);
+          this.resizeTimer = window.setTimeout(() => this.refresh(), 100);
+        });
+        this.resizeObserver.observe(this.element);
+      }
     }
 
     createFilter() {
@@ -48,8 +52,7 @@
       this.svg.setAttribute('width', '0');
       this.svg.setAttribute('height', '0');
       this.svg.setAttribute('aria-hidden', 'true');
-      this.svg.style.cssText =
-        'position:fixed;left:-9999px;top:-9999px;pointer-events:none;overflow:hidden';
+      this.svg.style.cssText = 'position:fixed;left:-9999px;top:-9999px;pointer-events:none;overflow:hidden';
 
       const defs = document.createElementNS(SVG_NS, 'defs');
       this.filter = document.createElementNS(SVG_NS, 'filter');
@@ -93,10 +96,10 @@
       const rect = this.element.getBoundingClientRect();
       if (rect.width < 10 || rect.height < 10 || !this.context) return;
 
-      const maxMapSize = this.isProminent ? 230 : 132;
+      const maxMapSize = this.isProminent ? 210 : 116;
       const ratio = Math.min(1, maxMapSize / Math.max(rect.width, rect.height));
-      const width = Math.max(30, Math.round(rect.width * ratio));
-      const height = Math.max(30, Math.round(rect.height * ratio));
+      const width = Math.max(28, Math.round(rect.width * ratio));
+      const height = Math.max(28, Math.round(rect.height * ratio));
 
       this.canvas.width = width;
       this.canvas.height = height;
@@ -114,14 +117,12 @@
           const px = nx * Math.max(1, aspect);
           const py = ny * Math.max(1, 1 / aspect);
           const edgeDistance = roundedRectSDF(nx, ny, 0.5, 0.5, cornerRadius);
-
           const rim = 1 - smoothStep(-0.18, 0.01, edgeDistance);
           const centreDistance = clamp(Math.hypot(px, py) / 0.72, 0, 1);
           const lens = (1 - centreDistance) * 0.028;
-          const edgeBulge = rim * rim * (this.isProminent ? 0.105 : 0.072);
+          const edgeBulge = rim * rim * (this.isProminent ? 0.105 : 0.068);
           const wave = Math.sin((nx * 3.2 + ny * 2.4) * Math.PI) * rim * 0.006;
           const length = Math.hypot(px, py) || 1;
-
           const dx = (px / length) * (edgeBulge + lens) + wave;
           const dy = (py / length) * (edgeBulge + lens) - wave * 0.75;
 
@@ -147,24 +148,30 @@
       this.filter.setAttribute('height', String(rect.height));
 
       const scale = clamp(
-        Math.min(rect.width, rect.height) * (this.isProminent ? 0.085 : 0.055),
-        11,
-        34
+        Math.min(rect.width, rect.height) * (this.isProminent ? 0.082 : 0.052),
+        10,
+        32
       );
       this.displacement.setAttribute('scale', String(scale));
 
-      const filterValue =
-        `url(#${this.id}) blur(0.65px) saturate(1.22) contrast(1.08)`;
+      const filterValue = `url(#${this.id}) blur(0.6px) saturate(1.2) contrast(1.07)`;
       this.layer.style.backdropFilter = filterValue;
       this.layer.style.webkitBackdropFilter = filterValue;
     }
   }
 
-  function initialize() {
-    // Do not apply SVG refraction to the fixed navigation bar. A pure Gaussian
-    // blur is clearer and more stable while content moves underneath it.
-    const surfaces = document.querySelectorAll('.glass:not(.topbar)');
-    surfaces.forEach((element, index) => {
+  function scheduleTask(task) {
+    if ('requestIdleCallback' in window) {
+      requestIdleCallback(task, { timeout: 850 });
+    } else {
+      window.setTimeout(task, 80);
+    }
+  }
+
+  function initializeSurface(element, index) {
+    if (initialized.has(element)) return;
+    initialized.add(element);
+    scheduleTask(() => {
       try {
         new LiquidSurface(element, index);
       } catch (error) {
@@ -173,9 +180,33 @@
     });
   }
 
-  if (document.body) {
-    initialize();
-  } else {
-    document.addEventListener('DOMContentLoaded', initialize, { once: true });
+  function initialize() {
+    if (started) return;
+    started = true;
+
+    const surfaces = [...document.querySelectorAll('.glass:not(.topbar):not(.status-pill)')];
+
+    if (!('IntersectionObserver' in window)) {
+      surfaces.forEach(initializeSurface);
+      return;
+    }
+
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+        const index = surfaces.indexOf(entry.target);
+        initializeSurface(entry.target, index);
+        observer.unobserve(entry.target);
+      });
+    }, { rootMargin: '420px 0px', threshold: 0.01 });
+
+    surfaces.forEach(surface => observer.observe(surface));
   }
+
+  function scheduleInitialize() {
+    scheduleTask(initialize);
+  }
+
+  window.addEventListener('site:ready-for-effects', scheduleInitialize, { once: true });
+  window.addEventListener('load', () => window.setTimeout(scheduleInitialize, 1400), { once: true });
 })();

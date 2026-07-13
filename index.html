@@ -2,6 +2,13 @@
 <html lang="zh-CN" data-lang="zh" data-theme="light">
 <head>
   <meta charset="utf-8">
+  <script>
+    document.documentElement.classList.add("is-loading");
+    window.__loaderFailsafe = window.setTimeout(() => {
+      document.documentElement.classList.remove("is-loading");
+      document.documentElement.classList.add("is-ready");
+    }, 4200);
+  </script>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="color-scheme" content="light dark">
   <meta name="theme-color" content="#eef5ff">
@@ -13,9 +20,22 @@
   <meta property="og:image" content="assets/avatar.webp">
   <title>Shouyu Lai | Robotics & Reinforcement Learning</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='18' fill='%23121624'/%3E%3Cpath d='M15 15h11v24h23v10H15z' fill='%237ee8fa'/%3E%3C/svg%3E">
-  <link rel="stylesheet" href="styles.css">
+  <link rel="preload" href="styles.css?v=5.0.0" as="style">
+  <link rel="preload" href="assets/avatar.webp?v=5.0.0" as="image" type="image/webp" fetchpriority="high">
+  <link rel="preload" href="app.js?v=5.0.0" as="script">
+  <link rel="stylesheet" href="styles.css?v=5.0.0">
 </head>
 <body>
+  <div class="page-loader" id="pageLoader" role="status" aria-live="polite" aria-label="Loading page">
+    <div class="loader-card">
+      <div class="loader-mark" aria-hidden="true">SL</div>
+      <div class="loader-copy">
+        <strong><span class="zh">正在准备机器人系统</span><span class="en">Preparing robotic systems</span></strong>
+        <span><span class="zh">加载首屏资源与交互效果</span><span class="en">Loading critical visuals and interactions</span></span>
+      </div>
+      <div class="loader-track" aria-hidden="true"><i></i></div>
+    </div>
+  </div>
   <a class="skip" href="#main"><span class="zh">跳到正文</span><span class="en">Skip to content</span></a>
 
   <div class="ambient" aria-hidden="true">
@@ -25,6 +45,7 @@
   <header class="topbar-wrap">
     <nav class="topbar glass glass-strong" aria-label="Primary navigation">
       <span class="topbar-blur" aria-hidden="true"></span>
+      <span class="topbar-flow-lobe" aria-hidden="true"></span>
       <a class="wordmark" href="#home" aria-label="Shouyu Lai home"><span class="mark">SL</span><span>Shouyu Lai</span></a>
       <div class="navlinks" id="navlinks">
         <a href="#about"><span class="zh">关于</span><span class="en">About</span></a>
@@ -54,15 +75,15 @@
           <div class="status-pill glass"><i></i><span class="zh">机器人方向博士生 · 北京航空航天大学</span><span class="en">Robotics Ph.D. Student · Beihang University</span></div>
           <p class="kicker">SHOUYU LAI · 来首宇</p>
           <h1><span class="zh">稍微做点<br><em>有趣的事。</em></span><span class="en">Doing something<br><em>a little interesting.</em></span></h1>
-          <p class="lead zh">研究机器人控制、强化学习与全身控制，也把算法放进无人机、足式机器人和可重构机构里，直到它们在真机上可靠工作。</p>
-          <p class="lead en">I work on robot control, reinforcement learning and whole-body control — then put the algorithms into UAVs, legged robots and reconfigurable mechanisms until they work reliably in the real world.</p>
+          <p class="lead zh">我的工作横跨机器人结构设计、电气与嵌入式集成、控制、强化学习、扩散模型和集群系统；更关注这些环节如何在同一套真实机器人中协同工作。</p>
+          <p class="lead en">My work spans robot mechanics, electrical and embedded integration, control, reinforcement learning, diffusion models and multi-robot systems — with an emphasis on making the pieces work together on real hardware.</p>
 
           <div class="hero-actions">
             <button class="apple-btn primary copy-email" data-email="laishouyu078@gmail.com" type="button">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="m4 7 8 6 8-6"/></svg>
               <span class="zh">复制邮箱</span><span class="en">Copy email</span>
             </button>
-            <a class="apple-btn" href="https://github.com/1aStIY" target="_blank" rel="noopener noreferrer">
+            <a class="apple-btn" href="https://github.com/1aStlY" target="_blank" rel="noopener noreferrer">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3.3-.4 6.8-1.6 6.8-7A5.5 5.5 0 0 0 19.3 4 5.1 5.1 0 0 0 19.2.5S18 0 15 2a13.4 13.4 0 0 0-7 0C5 0 3.8.5 3.8.5A5.1 5.1 0 0 0 3.7 4a5.5 5.5 0 0 0-1.5 3.8c0 5.4 3.5 6.6 6.8 7A4.8 4.8 0 0 0 8 18v4"/><path d="M8 19c-3 .9-3-1.5-4-2"/></svg>
               GitHub
             </a>
@@ -73,13 +94,13 @@
           </div>
 
           <div class="topic-row" aria-label="Research topics">
-            <span>Robot Control</span><span>Reinforcement Learning</span><span>Whole-Body Control</span><span>Mechanical Design</span>
+            <span>Mechanical Design</span><span>Electrical Integration</span><span>Robot Control</span><span>Reinforcement Learning</span><span>Diffusion Models</span><span>Robot Swarms</span>
           </div>
         </div>
 
         <div class="hero-visual reveal">
           <div class="portrait-card glass glass-strong" data-liquid>
-            <img src="assets/avatar.webp" alt="Cartoon portrait of Shouyu Lai">
+            <img src="assets/avatar.webp?v=5.0.0" alt="Cartoon portrait of Shouyu Lai" loading="eager" decoding="async" fetchpriority="high" data-critical-image>
             <div class="portrait-caption">
               <div><strong>Shouyu Lai</strong><span>来首宇</span></div>
               <span class="online"><i></i> 4573 Lab</span>
@@ -104,22 +125,53 @@
         <article><span>NOW</span><strong class="zh">人工智能博士生</strong><strong class="en">Ph.D. in AI</strong><p>2024 — Present</p></article>
         <article><span>LAB</span><strong>4573 Laboratory</strong><p>Beihang University</p></article>
         <article><span>EDU</span><strong class="zh">机械工程背景</strong><strong class="en">Mechanical Engineering</strong><p>HEU → Beihang</p></article>
-        <article><span>WORK</span><strong class="zh">控制 · 学习 · 机械</strong><strong class="en">Control · Learning · Mechanics</strong><p>Algorithms to hardware</p></article>
+        <article><span>WORK</span><strong class="zh">结构 · 电气 · 控制 · 学习</strong><strong class="en">Mechanics · Electronics · Control · Learning</strong><p>System-wide development</p></article>
         <article><span>CONTACT</span><strong>laishouyu078</strong><p>@gmail.com</p></article>
       </div>
     </section>
 
     <section id="about" class="section">
       <div class="container">
-        <header class="section-head reveal"><span>01</span><div><p>ABOUT</p><h2 class="zh">把智能做进真实系统。</h2><h2 class="en">Engineering intelligence into real systems.</h2></div></header>
+        <header class="section-head reveal"><span>01</span><div><p>ABOUT</p><h2 class="zh">从结构到策略，理解完整系统。</h2><h2 class="en">Understanding the whole robot, from structure to policy.</h2></div></header>
         <div class="about-bento">
           <article class="glass bento-wide reveal">
-            <p class="zh">我是北京航空航天大学人工智能方向博士生，就读于 <strong>4573实验室</strong>。我关注能够离开理想仿真、在真实系统中可靠运行的学习型机器人，将强化学习、基于模型的机器人控制、全身控制、机械设计与嵌入式系统集成结合起来。</p>
-            <p class="en">I am a Ph.D. student in Artificial Intelligence at <strong>Beihang University</strong>, working in the <strong>4573 Laboratory</strong>. I build learning-enabled robots that must operate beyond clean simulations by combining reinforcement learning, model-based control, whole-body control, mechanical design and embedded integration.</p>
+            <div class="about-copy zh">
+              <p>我是北京航空航天大学人工智能方向博士生，就读于 <strong>4573实验室</strong>。我的机器人经历比较宽：参与过机械结构与机构设计、电气和嵌入式集成、传感器与执行器调试、机器人控制、强化学习，也在探索扩散模型和集群系统。</p>
+              <p>我不会把自己描述成每个方向都很精通。相比单点专家，我更擅长理解各模块之间的接口、约束和相互影响。大量实物搭建与调试经历，使我能够在研发团队中连接结构、电气、控制与算法，从整体视角帮助系统逐步收敛并落地。</p>
+            </div>
+            <div class="about-copy en">
+              <p>I am a Ph.D. student in Artificial Intelligence at <strong>Beihang University</strong>, working in the <strong>4573 Laboratory</strong>. My robotics experience is deliberately broad: mechanisms and mechanical design, electrical and embedded integration, sensing and actuation, robot control, reinforcement learning, and ongoing exploration of diffusion models and multi-robot systems.</p>
+              <p>I would not claim deep expertise in every area. My strength is understanding the interfaces, constraints and trade-offs between modules. Extensive hands-on debugging helps me connect mechanical, electrical, control and learning teams, and support system development from an overall engineering perspective.</p>
+            </div>
           </article>
-          <article class="glass principle reveal"><b>01</b><h3 class="zh">先把控制做稳</h3><h3 class="en">Control before spectacle</h3><p class="zh">性能应当可解释、可测试、可重复。</p><p class="en">Performance should remain explainable, testable and repeatable.</p></article>
-          <article class="glass principle reveal"><b>02</b><h3 class="zh">算法必须遇见机构</h3><h3 class="en">Algorithms meet mechanisms</h3><p class="zh">策略、控制器、结构、电子与感知协同设计。</p><p class="en">Co-design policy, controller, structure, electronics and sensing.</p></article>
-          <article class="glass principle reveal"><b>03</b><h3 class="zh">闭合仿真到现实</h3><h3 class="en">Close the sim-to-real loop</h3><p class="zh">把真机失败当作信息，而不是最后的意外。</p><p class="en">Treat real-system failures as information, not an afterthought.</p></article>
+
+          <article class="glass principle reveal">
+            <b>01</b>
+            <h3 class="zh">贯通结构到算法</h3><h3 class="en">Across mechanics and algorithms</h3>
+            <p class="zh">从机构、电气和嵌入式，到控制与学习算法，都有实际参与和调试经验。</p>
+            <p class="en">Hands-on experience across mechanisms, electronics, embedded systems, control and learning.</p>
+          </article>
+
+          <article class="glass principle reveal">
+            <b>02</b>
+            <h3 class="zh">把接口说清楚</h3><h3 class="en">Make interfaces explicit</h3>
+            <p class="zh">理解不同模块的约束，帮助结构、电气、控制和算法人员对齐需求。</p>
+            <p class="en">Understand module constraints and help different engineering roles align their requirements.</p>
+          </article>
+
+          <article class="glass principle reveal">
+            <b>03</b>
+            <h3 class="zh">用真机检验判断</h3><h3 class="en">Let hardware test the idea</h3>
+            <p class="zh">通过大量实物调试定位耦合问题，让设计、控制和算法一起收敛。</p>
+            <p class="en">Use extensive hardware debugging to locate coupled problems and drive system convergence.</p>
+          </article>
+
+          <article class="glass principle reveal">
+            <b>04</b>
+            <h3 class="zh">广而不自满</h3><h3 class="en">Broad, but still learning</h3>
+            <p class="zh">涉猎广泛不等于样样精通；更重视快速学习、系统判断和可靠协作。</p>
+            <p class="en">Breadth is not mastery of everything; I value fast learning, systems judgement and reliable collaboration.</p>
+          </article>
         </div>
       </div>
     </section>
@@ -128,10 +180,10 @@
       <div class="container">
         <header class="section-head reveal"><span>02</span><div><p>RESEARCH</p><h2 class="zh">研究方向</h2><h2 class="en">Research focus</h2></div></header>
         <div class="research-grid">
-          <article class="research-card glass reveal"><div class="glyph">RL</div><h3 class="zh">机器人控制与强化学习</h3><h3 class="en">Robot Control & Reinforcement Learning</h3><p class="zh">学习控制、策略优化、鲁棒部署、仿真到现实迁移，以及模型知识与数据驱动策略的融合。</p><p class="en">Learning-based control, policy optimization, robust deployment, sim-to-real transfer and hybrid model/data-driven policies.</p></article>
-          <article class="research-card glass reveal"><div class="glyph">WB</div><h3 class="zh">全身控制与足式机器人</h3><h3 class="en">Whole-Body & Legged Robotics</h3><p class="zh">面向人形、四足和四足机械臂系统的运动—操作协同与全身行为。</p><p class="en">Coordinated locomotion and manipulation for humanoids, quadrupeds and quadruped manipulators.</p></article>
-          <article class="research-card glass reveal"><div class="glyph">UAV</div><h3 class="zh">飞行机器人与无人机系统</h3><h3 class="en">Aerial Robotics & UAV Systems</h3><p class="zh">自主无人机平台、飞行控制、机载AI、激光雷达、远距离通信与反无人机系统。</p><p class="en">Autonomous UAVs, flight control, onboard AI, LiDAR, long-range communication and anti-UAV systems.</p></article>
-          <article class="research-card glass reveal"><div class="glyph">ME</div><h3 class="zh">机械设计与可重构机器人</h3><h3 class="en">Mechanical Design & Reconfigurable Robots</h3><p class="zh">串并混联机构、形态重构、机电协同设计、CAD、原型与系统工程。</p><p class="en">Serial-parallel mechanisms, morphology reconfiguration, mechatronic co-design, CAD, prototyping and system engineering.</p></article>
+          <article class="research-card glass reveal"><div class="glyph">RL</div><h3 class="zh">机器人控制、强化学习与全身行为</h3><h3 class="en">Robot Control, RL & Whole-Body Behavior</h3><p class="zh">关注模型控制与学习策略的结合、策略部署、全身控制，以及从仿真到真实机器人的可靠迁移。</p><p class="en">Model-based and learning-based control, policy deployment, whole-body behavior and reliable sim-to-real transfer.</p></article>
+          <article class="research-card glass reveal"><div class="glyph">DM</div><h3 class="zh">扩散模型与生成式机器人学习</h3><h3 class="en">Diffusion Models & Generative Robot Learning</h3><p class="zh">正在探索扩散策略和生成式模型在机器人动作生成、决策与多模态行为表示中的应用。</p><p class="en">Exploring diffusion policies and generative models for robot motion, decision-making and multimodal behavior representations.</p></article>
+          <article class="research-card glass reveal"><div class="glyph">SW</div><h3 class="zh">无人机、集群与多机器人系统</h3><h3 class="en">UAVs, Swarms & Multi-Robot Systems</h3><p class="zh">涉及无人机平台、飞行控制、通信链路、多机协同与集群系统中的工程约束和部署问题。</p><p class="en">UAV platforms, flight control, communication links, multi-robot coordination and practical swarm deployment constraints.</p></article>
+          <article class="research-card glass reveal"><div class="glyph">SE</div><h3 class="zh">结构、电气与系统集成</h3><h3 class="en">Mechanical, Electrical & System Integration</h3><p class="zh">涵盖机构与机械设计、电气和嵌入式接口、传感执行系统、可重构机器人以及整机调试。</p><p class="en">Mechanisms, mechanical design, electrical and embedded interfaces, sensing and actuation, reconfigurable robots and full-system debugging.</p></article>
         </div>
       </div>
     </section>
@@ -141,7 +193,7 @@
         <header class="section-head reveal"><span>03</span><div><p>PROJECTS</p><h2 class="zh">代表性工程项目</h2><h2 class="en">Selected engineering work</h2></div></header>
         <div class="projects">
           <article class="project glass reveal">
-            <button class="project-image" data-lightbox="assets/quadruped.webp" aria-label="Open quadruped project image"><img src="assets/quadruped.webp" alt="Quadruped manipulator simulation and real deployment"></button>
+            <button class="project-image" data-lightbox="assets/quadruped.webp" aria-label="Open quadruped project image"><img src="assets/quadruped.webp?v=5.0.0" alt="Quadruped manipulator simulation and real deployment" loading="lazy" decoding="async" width="1600" height="900"></button>
             <div class="project-copy"><span class="project-no">01 / RL · WBC · SIM2REAL</span><h3 class="zh">四足机械臂：强化学习与全身控制</h3><h3 class="en">Quadruped Manipulator: RL + Whole-Body Control</h3><p class="zh">面向四足机器人运动与操作协同的仿真到现实流程，将强化学习与全身控制结合，并在 Isaac Lab、MuJoCo 与真实机器人平台之间进行开发和验证。</p><p class="en">A simulation-to-real workflow for quadruped locomotion and manipulation, combining reinforcement learning and whole-body control across Isaac Lab, MuJoCo and a real robot.</p><div class="tags"><span>Reinforcement Learning</span><span>Whole-Body Control</span><span>Isaac Lab</span><span>MuJoCo</span><span>Sim-to-Real</span></div></div>
           </article>
 
@@ -153,12 +205,12 @@
           </article>
 
           <article class="project glass reveal">
-            <button class="project-image contain" data-lightbox="assets/uav-jg200.webp" aria-label="Open UAV project image"><img src="assets/uav-jg200.webp" alt="Autonomous UAV platform and system architecture"></button>
+            <button class="project-image contain" data-lightbox="assets/uav-jg200.webp" aria-label="Open UAV project image"><img src="assets/uav-jg200.webp?v=5.0.0" alt="Autonomous UAV platform and system architecture" loading="lazy" decoding="async" width="1600" height="900"></button>
             <div class="project-copy"><span class="project-no">03 / UAV · AUTONOMY · MECHATRONICS</span><h3 class="zh">自主无人机平台与反无人机系统</h3><h3 class="en">Autonomous UAV Platforms & Anti-UAV Systems</h3><p class="zh">设计并集成四目相机+激光雷达、双轴吊舱+激光雷达、网捕式反无人机以及信号压制软杀伤等平台，覆盖结构、动力、飞控、机载计算、传感、电源与通信链路。</p><p class="en">Design and integration of multi-camera/LiDAR UAVs, gimbal/LiDAR platforms, net-capture anti-UAV systems and signal-suppression platforms, covering structure, propulsion, flight control, onboard computing, sensing, power and communication.</p><div class="tags"><span>UAV Design</span><span>Flight Control</span><span>LiDAR</span><span>Orin NX</span><span>Mesh Communication</span></div></div>
           </article>
 
           <article class="project glass reveal reverse">
-            <button class="project-image contain" data-lightbox="assets/uav-system.webp" aria-label="Open compact UAV system image"><img src="assets/uav-system.webp" alt="Compact aerial robot design and hardware architecture"></button>
+            <button class="project-image contain" data-lightbox="assets/uav-system.webp" aria-label="Open compact UAV system image"><img src="assets/uav-system.webp?v=5.0.0" alt="Compact aerial robot design and hardware architecture" loading="lazy" decoding="async" width="1600" height="900"></button>
             <div class="project-copy"><span class="project-no">04 / HARDWARE · EMBEDDED AI</span><h3 class="zh">紧凑型飞行机器人系统工程</h3><h3 class="en">Compact Aerial Robot System Engineering</h3><p class="zh">在紧凑平台中集成飞行控制、动力、全向感知、机载边缘AI、激光雷达自主导航与远距离通信，重点解决重量、供电、散热、布线和机械布局。</p><p class="en">A compact aerial robot integrating flight control, propulsion, omnidirectional sensing, edge AI, LiDAR navigation and long-range communication under mass, power, thermal, wiring and packaging constraints.</p><div class="tags"><span>Edge AI</span><span>Autonomous Navigation</span><span>Power Architecture</span><span>Mechanical Packaging</span></div></div>
           </article>
         </div>
@@ -167,14 +219,25 @@
 
     <section id="skills" class="section">
       <div class="container">
-        <header class="section-head reveal"><span>04</span><div><p>SKILLS</p><h2 class="zh">从策略到样机</h2><h2 class="en">From policy to prototype</h2></div></header>
+        <header class="section-head reveal"><span>04</span><div><p>SKILLS</p><h2 class="zh">从结构到策略，再回到真机</h2><h2 class="en">From structure to policy, and back to hardware</h2></div></header>
         <div class="skills-grid">
-          <article class="glass skill-summary reveal"><h3 class="zh">跨越算法与硬件的完整链路。</h3><h3 class="en">A complete path across algorithms and hardware.</h3><p class="zh">把学习与控制算法连接到机械系统、机载计算、传感器、执行器和可重复的测试流程。</p><p class="en">Connecting learning and control algorithms to mechanical systems, onboard computers, sensors, actuators and repeatable tests.</p><dl><div><dt>PRIMARY</dt><dd>RL / CONTROL</dd></div><div><dt>STRONG</dt><dd>SYSTEM INTEGRATION</dd></div><div><dt>BASE</dt><dd>MECHANICAL DESIGN</dd></div><div><dt>NEXT</dt><dd>EMBODIED AI</dd></div></dl></article>
+          <article class="glass skill-summary reveal">
+            <h3 class="zh">广度不是替代深度，而是为了把系统接起来。</h3>
+            <h3 class="en">Breadth does not replace depth; it helps connect the system.</h3>
+            <p class="zh">我不是每个方向的专家。我的优势是能理解机械、电气、嵌入式、控制和学习算法之间的接口与权衡，并借助大量真机调试经验，快速定位跨模块问题、协同不同角色推进整机开发。</p>
+            <p class="en">I do not present myself as an expert in every field. My strength is understanding the interfaces and trade-offs between mechanics, electronics, embedded systems, control and learning, then using extensive hardware debugging experience to locate cross-module problems and help teams move the complete system forward.</p>
+            <dl>
+              <div><dt>PRIMARY</dt><dd>ROBOT CONTROL / RL</dd></div>
+              <div><dt>BREADTH</dt><dd>MECH · ELEC · SOFTWARE</dd></div>
+              <div><dt>EXPERIENCE</dt><dd>HARDWARE DEBUGGING</dd></div>
+              <div><dt>ROLE</dt><dd>SYSTEM BRIDGE</dd></div>
+            </dl>
+          </article>
           <div class="skill-cards">
-            <article class="glass reveal"><h3 class="zh">学习与控制</h3><h3 class="en">Learning & Control</h3><div class="tags big"><span>Reinforcement Learning</span><span>Robot Control</span><span>Whole-Body Control</span><span>Sim-to-Real</span><span>Policy Deployment</span></div></article>
-            <article class="glass reveal"><h3 class="zh">仿真与软件</h3><h3 class="en">Simulation & Software</h3><div class="tags big"><span>Python</span><span>PyTorch</span><span>Isaac Lab</span><span>MuJoCo</span><span>Robot Simulation</span></div></article>
-            <article class="glass reveal"><h3 class="zh">机械工程</h3><h3 class="en">Mechanical Engineering</h3><div class="tags big"><span>Mechanical Design</span><span>CAD & Prototyping</span><span>Mechanism Design</span><span>Serial–Parallel Robots</span><span>Mechatronic Co-design</span></div></article>
-            <article class="glass reveal"><h3 class="zh">机器人系统</h3><h3 class="en">Robot Systems</h3><div class="tags big"><span>UAV Integration</span><span>Flight Control</span><span>Orin NX</span><span>LiDAR</span><span>Power Systems</span><span>Mesh Communication</span></div></article>
+            <article class="glass reveal"><h3 class="zh">学习与控制</h3><h3 class="en">Learning & Control</h3><div class="tags big"><span>Reinforcement Learning</span><span>Robot Control</span><span>Whole-Body Control</span><span>Diffusion Models</span><span>Sim-to-Real</span></div></article>
+            <article class="glass reveal"><h3 class="zh">电气与嵌入式</h3><h3 class="en">Electrical & Embedded</h3><div class="tags big"><span>Onboard Computing</span><span>Sensors & Actuators</span><span>Power Systems</span><span>Communication</span><span>System Wiring</span></div></article>
+            <article class="glass reveal"><h3 class="zh">机械与机构</h3><h3 class="en">Mechanical & Mechanisms</h3><div class="tags big"><span>Mechanical Design</span><span>CAD & Prototyping</span><span>Mechanism Design</span><span>Serial–Parallel Robots</span><span>Mechatronic Co-design</span></div></article>
+            <article class="glass reveal"><h3 class="zh">系统集成与真机调试</h3><h3 class="en">System Integration & Hardware Debugging</h3><div class="tags big"><span>UAV Integration</span><span>Robot Swarms</span><span>Field Testing</span><span>Fault Isolation</span><span>Cross-team Interface</span></div></article>
           </div>
         </div>
       </div>
@@ -202,22 +265,22 @@
       <div class="container">
         <article class="contact-card glass glass-strong reveal" data-liquid>
           <p class="eyebrow">CONTACT</p>
-          <h2 class="zh">聊聊机器人，或者稍微做点有趣的事。</h2>
-          <h2 class="en">Let’s talk robots — or do something a little interesting.</h2>
-          <p class="zh">欢迎就学术交流、机器人合作或工程问题与我联系。此页面公开展示姓名与邮箱，也用于会议注册和学术身份验证。</p>
-          <p class="en">For academic communication, robotics collaboration or engineering discussion, contact me by email. This page also provides public identity verification for conferences.</p>
-          <div class="hero-actions"><a class="apple-btn primary" href="mailto:laishouyu078@gmail.com">laishouyu078@gmail.com</a><button class="apple-btn copy-email" data-email="laishouyu078@gmail.com" type="button"><span class="zh">复制地址</span><span class="en">Copy address</span></button><a class="apple-btn" href="https://github.com/1aStIY" target="_blank" rel="noopener noreferrer">GitHub / 1aStIY</a></div>
+          <h2 class="zh">聊聊机器人，或者一起做点有趣的事。</h2>
+          <h2 class="en">Let’s talk robots — or do something a little interesting together.</h2>
+          <p class="zh">如果项目需要在结构、电气、控制和学习算法之间做沟通与系统集成，欢迎交流。我仍在持续补足各方向的深度，但愿意以真机问题为中心，和不同专业的人一起把整套系统做出来。</p>
+          <p class="en">If a project needs coordination and system integration across mechanics, electronics, control and learning, I would be glad to talk. I am still building deeper expertise in each area, but I enjoy working around real hardware problems with people from different disciplines to make the complete system function.</p>
+          <div class="hero-actions"><a class="apple-btn primary" href="mailto:laishouyu078@gmail.com">laishouyu078@gmail.com</a><button class="apple-btn copy-email" data-email="laishouyu078@gmail.com" type="button"><span class="zh">复制地址</span><span class="en">Copy address</span></button><a class="apple-btn" href="https://github.com/1aStlY" target="_blank" rel="noopener noreferrer">GitHub / 1aStlY</a></div>
         </article>
       </div>
     </section>
   </main>
 
-  <footer><div class="container footer-inner"><div><strong>Shouyu Lai / 来首宇</strong><span>© <span id="year"></span> · Beihang University</span></div><div class="counter"><span class="zh">访问统计</span><span class="en">Visitors</span><img src="https://visitor-badge.laobi.icu/badge?page_id=1aStIY.1aStIY.github.io&amp;left_text=visitors" alt="Visitor count" loading="lazy" onerror="this.hidden=true"></div></div></footer>
+  <footer><div class="container footer-inner"><div><strong>Shouyu Lai / 来首宇</strong><span>© <span id="year"></span> · Beihang University</span></div><div class="counter"><span class="zh">访问统计</span><span class="en">Visitors</span><img src="https://visitor-badge.laobi.icu/badge?page_id=1aStlY.1aStlY.github.io&amp;left_text=visitors" alt="Visitor count" loading="lazy" onerror="this.hidden=true"></div></div></footer>
 
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
   <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Project image preview"><button id="closeLightbox" class="round-btn" type="button" aria-label="Close preview">×</button><img id="lightboxImg" alt=""></div>
 
-  <script src="liquid-glass.js"></script>
-  <script src="app.js"></script>
+  <script src="liquid-glass.js?v=5.0.0" defer></script>
+  <script src="app.js?v=5.0.0" defer></script>
 </body>
 </html>
