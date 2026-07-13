@@ -1,0 +1,2280 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark" data-lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="dark light">
+  <meta name="theme-color" content="#07111f">
+  <meta name="description" content="Shouyu Lai — Ph.D. student at Beihang University working on robot control, reinforcement learning, whole-body control, UAVs, and reconfigurable robots.">
+  <meta name="author" content="Shouyu Lai">
+  <meta property="og:title" content="Shouyu Lai | Robotics & Reinforcement Learning">
+  <meta property="og:description" content="Robot control, reinforcement learning, whole-body control, UAVs, and reconfigurable robotics.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="assets/avatar.webp">
+
+  <title>Shouyu Lai | Robotics & Reinforcement Learning</title>
+
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2307131f'/%3E%3Cpath d='M16 17h9v23h18v8H16z' fill='%235eead4'/%3E%3Cpath d='M36 16h12v9H36z' fill='%2360a5fa'/%3E%3C/svg%3E">
+
+  <style>
+    :root {
+      --bg: #07111f;
+      --bg-soft: #0b1728;
+      --panel: rgba(15, 31, 50, 0.78);
+      --panel-solid: #0f1f32;
+      --panel-2: #13263c;
+      --text: #eaf2fb;
+      --muted: #93a8bd;
+      --line: rgba(148, 184, 217, 0.18);
+      --accent: #5eead4;
+      --accent-2: #60a5fa;
+      --accent-3: #c084fc;
+      --warning: #fbbf24;
+      --shadow: 0 24px 70px rgba(0, 0, 0, 0.28);
+      --radius: 22px;
+      --max: 1180px;
+      --nav-h: 72px;
+    }
+
+    html[data-theme="light"] {
+      --bg: #f3f7fb;
+      --bg-soft: #eaf1f7;
+      --panel: rgba(255, 255, 255, 0.82);
+      --panel-solid: #ffffff;
+      --panel-2: #edf4f9;
+      --text: #102235;
+      --muted: #587087;
+      --line: rgba(30, 72, 104, 0.15);
+      --accent: #0f9f8e;
+      --accent-2: #2563eb;
+      --accent-3: #7c3aed;
+      --warning: #b77900;
+      --shadow: 0 24px 65px rgba(38, 78, 112, 0.13);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      scroll-padding-top: calc(var(--nav-h) + 18px);
+    }
+
+    body {
+      margin: 0;
+      min-width: 320px;
+      background:
+        radial-gradient(circle at 15% 8%, color-mix(in srgb, var(--accent-2) 14%, transparent), transparent 29rem),
+        radial-gradient(circle at 88% 16%, color-mix(in srgb, var(--accent) 11%, transparent), transparent 27rem),
+        var(--bg);
+      color: var(--text);
+      font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI",
+                   "Noto Sans", "Noto Sans SC", Arial, sans-serif;
+      line-height: 1.65;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.22;
+      background-image:
+        linear-gradient(var(--line) 1px, transparent 1px),
+        linear-gradient(90deg, var(--line) 1px, transparent 1px);
+      background-size: 48px 48px;
+      mask-image: linear-gradient(to bottom, black, transparent 85%);
+      z-index: -2;
+    }
+
+    ::selection {
+      background: color-mix(in srgb, var(--accent) 32%, transparent);
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button, a {
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    button {
+      font: inherit;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+    }
+
+    .skip-link {
+      position: fixed;
+      left: 16px;
+      top: -60px;
+      z-index: 1000;
+      background: var(--text);
+      color: var(--bg);
+      padding: 10px 14px;
+      border-radius: 10px;
+      transition: top 0.2s ease;
+    }
+
+    .skip-link:focus {
+      top: 12px;
+    }
+
+    .container {
+      width: min(var(--max), calc(100% - 40px));
+      margin-inline: auto;
+    }
+
+    .site-nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      height: var(--nav-h);
+      border-bottom: 1px solid var(--line);
+      background: color-mix(in srgb, var(--bg) 78%, transparent);
+      backdrop-filter: blur(18px) saturate(135%);
+    }
+
+    .nav-inner {
+      height: 100%;
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      flex: 0 0 auto;
+      font-weight: 850;
+      letter-spacing: -0.03em;
+    }
+
+    .brand-mark {
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: linear-gradient(145deg, var(--panel-2), var(--panel-solid));
+      box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 12%, transparent);
+      color: var(--accent);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 13px;
+    }
+
+    .brand-text {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    }
+
+    .brand-text span {
+      color: var(--accent);
+    }
+
+    .nav-links {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .nav-link {
+      position: relative;
+      padding: 9px 12px;
+      border-radius: 10px;
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 700;
+      transition: color 0.2s ease, background 0.2s ease;
+    }
+
+    .nav-link:hover,
+    .nav-link.active {
+      color: var(--text);
+      background: color-mix(in srgb, var(--panel-2) 72%, transparent);
+    }
+
+    .nav-link.active::after {
+      content: "";
+      position: absolute;
+      left: 12px;
+      right: 12px;
+      bottom: 4px;
+      height: 2px;
+      border-radius: 99px;
+      background: var(--accent);
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .icon-button {
+      min-width: 40px;
+      height: 40px;
+      display: inline-grid;
+      place-items: center;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--panel);
+      color: var(--text);
+      cursor: pointer;
+      transition: transform 0.18s ease, border-color 0.18s ease, background 0.18s ease;
+    }
+
+    .icon-button:hover {
+      transform: translateY(-2px);
+      border-color: color-mix(in srgb, var(--accent) 55%, var(--line));
+      background: var(--panel-2);
+    }
+
+    .lang-button {
+      min-width: 48px;
+      padding-inline: 10px;
+      font-size: 13px;
+      font-weight: 850;
+    }
+
+    .menu-button {
+      display: none;
+    }
+
+    main {
+      overflow: clip;
+    }
+
+    .hero {
+      min-height: calc(100svh - var(--nav-h));
+      display: grid;
+      align-items: center;
+      padding: 68px 0 54px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(330px, 0.8fr);
+      gap: 64px;
+      align-items: center;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      margin-bottom: 20px;
+      color: var(--accent);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .status-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 0 7px color-mix(in srgb, var(--accent) 13%, transparent),
+                  0 0 22px color-mix(in srgb, var(--accent) 70%, transparent);
+      animation: pulse 2.3s infinite;
+    }
+
+    @keyframes pulse {
+      50% { opacity: 0.5; transform: scale(0.88); }
+    }
+
+    .hero h1 {
+      margin: 0;
+      max-width: 780px;
+      font-size: clamp(48px, 7vw, 88px);
+      line-height: 0.98;
+      letter-spacing: -0.065em;
+    }
+
+    .hero h1 .name {
+      display: block;
+    }
+
+    .hero h1 .accent-text {
+      display: block;
+      margin-top: 12px;
+      color: transparent;
+      background: linear-gradient(100deg, var(--accent), var(--accent-2) 52%, var(--accent-3));
+      -webkit-background-clip: text;
+      background-clip: text;
+      font-size: 0.7em;
+      line-height: 1.08;
+      letter-spacing: -0.045em;
+    }
+
+    .hero-intro {
+      max-width: 700px;
+      margin: 26px 0 0;
+      color: var(--muted);
+      font-size: clamp(17px, 2vw, 21px);
+    }
+
+    .hero-intro strong {
+      color: var(--text);
+      font-weight: 800;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 32px;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      min-height: 46px;
+      padding: 0 18px;
+      border: 1px solid var(--line);
+      border-radius: 13px;
+      background: var(--panel);
+      color: var(--text);
+      cursor: pointer;
+      font-weight: 800;
+      transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
+    }
+
+    .button:hover {
+      transform: translateY(-2px);
+      border-color: color-mix(in srgb, var(--accent) 55%, var(--line));
+      box-shadow: 0 12px 26px color-mix(in srgb, var(--accent) 10%, transparent);
+    }
+
+    .button.primary {
+      border-color: transparent;
+      color: #041416;
+      background: linear-gradient(115deg, var(--accent), color-mix(in srgb, var(--accent-2) 45%, var(--accent)));
+      box-shadow: 0 12px 32px color-mix(in srgb, var(--accent) 22%, transparent);
+    }
+
+    .button svg,
+    .icon-button svg {
+      width: 18px;
+      height: 18px;
+      stroke-width: 2;
+    }
+
+    .hero-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px 18px;
+      margin-top: 26px;
+      color: var(--muted);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 13px;
+    }
+
+    .hero-meta span {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .hero-meta b {
+      color: var(--accent);
+      font-weight: 900;
+    }
+
+    .profile-stack {
+      position: relative;
+      width: min(100%, 430px);
+      justify-self: end;
+    }
+
+    .profile-stack::before,
+    .profile-stack::after {
+      content: "";
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(0.2px);
+      z-index: -1;
+    }
+
+    .profile-stack::before {
+      width: 230px;
+      height: 230px;
+      right: -36px;
+      top: -36px;
+      background: color-mix(in srgb, var(--accent-2) 19%, transparent);
+    }
+
+    .profile-stack::after {
+      width: 180px;
+      height: 180px;
+      left: -42px;
+      bottom: 50px;
+      background: color-mix(in srgb, var(--accent) 16%, transparent);
+    }
+
+    .avatar-frame {
+      position: relative;
+      overflow: hidden;
+      aspect-ratio: 1;
+      border: 1px solid var(--line);
+      border-radius: 34px;
+      background: var(--panel-solid);
+      box-shadow: var(--shadow);
+      transform: rotate(1.2deg);
+    }
+
+    .avatar-frame img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s cubic-bezier(.2,.7,.2,1);
+    }
+
+    .avatar-frame:hover img {
+      transform: scale(1.035);
+    }
+
+    .avatar-frame::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      border-radius: inherit;
+      box-shadow: inset 0 0 0 1px color-mix(in srgb, white 15%, transparent);
+    }
+
+    .terminal {
+      position: absolute;
+      left: -76px;
+      bottom: -44px;
+      width: min(390px, 92%);
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: color-mix(in srgb, var(--panel-solid) 90%, transparent);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(18px);
+      transform: rotate(-1.4deg);
+    }
+
+    .terminal-head {
+      height: 38px;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      padding: 0 14px;
+      border-bottom: 1px solid var(--line);
+      color: var(--muted);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 11px;
+    }
+
+    .dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--muted);
+      opacity: 0.55;
+    }
+
+    .dot:nth-child(1) { background: #ff6b6b; }
+    .dot:nth-child(2) { background: #ffd43b; }
+    .dot:nth-child(3) { background: #51cf66; }
+
+    .terminal-title {
+      margin-left: 6px;
+      opacity: 0.76;
+    }
+
+    .terminal-body {
+      padding: 16px 18px 18px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 12px;
+      line-height: 1.8;
+    }
+
+    .cmd { color: var(--accent); }
+    .path { color: var(--accent-2); }
+    .value { color: var(--text); }
+    .comment { color: var(--muted); }
+
+    section {
+      padding: 92px 0;
+    }
+
+    .section-heading {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr);
+      align-items: end;
+      gap: 22px;
+      margin-bottom: 34px;
+    }
+
+    .section-index {
+      color: var(--accent);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 13px;
+      font-weight: 900;
+    }
+
+    .section-heading h2 {
+      margin: 0;
+      font-size: clamp(34px, 5vw, 56px);
+      line-height: 1.05;
+      letter-spacing: -0.045em;
+    }
+
+    .section-line {
+      height: 1px;
+      margin-bottom: 9px;
+      background: linear-gradient(90deg, var(--line), transparent);
+    }
+
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 26px;
+    }
+
+    .panel {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--panel);
+      box-shadow: 0 16px 46px color-mix(in srgb, black 11%, transparent);
+      backdrop-filter: blur(14px);
+    }
+
+    .about-copy {
+      padding: clamp(25px, 4vw, 42px);
+    }
+
+    .about-copy p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 17px;
+    }
+
+    .about-copy p + p {
+      margin-top: 18px;
+    }
+
+    .about-copy strong {
+      color: var(--text);
+    }
+
+    .principles {
+      padding: 18px;
+      display: grid;
+      gap: 12px;
+    }
+
+    .principle {
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: color-mix(in srgb, var(--panel-2) 72%, transparent);
+    }
+
+    .principle .num {
+      color: var(--accent);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .principle h3 {
+      margin: 5px 0 5px;
+      font-size: 17px;
+    }
+
+    .principle p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .focus-grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 18px;
+    }
+
+    .focus-card {
+      position: relative;
+      min-height: 245px;
+      padding: 26px;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: linear-gradient(150deg, color-mix(in srgb, var(--panel-2) 86%, transparent), var(--panel));
+      transition: transform 0.22s ease, border-color 0.22s ease;
+    }
+
+    .focus-card:hover {
+      transform: translateY(-5px);
+      border-color: color-mix(in srgb, var(--accent) 45%, var(--line));
+    }
+
+    .focus-card.primary-focus {
+      grid-column: span 7;
+    }
+
+    .focus-card.secondary-focus {
+      grid-column: span 5;
+    }
+
+    .focus-card.third-focus,
+    .focus-card.fourth-focus {
+      grid-column: span 6;
+    }
+
+    .focus-card::after {
+      content: "";
+      position: absolute;
+      width: 160px;
+      height: 160px;
+      right: -55px;
+      bottom: -75px;
+      border: 1px solid color-mix(in srgb, var(--accent) 24%, transparent);
+      border-radius: 50%;
+      box-shadow: 0 0 0 28px color-mix(in srgb, var(--accent) 5%, transparent),
+                  0 0 0 56px color-mix(in srgb, var(--accent) 3%, transparent);
+    }
+
+    .focus-icon {
+      width: 48px;
+      height: 48px;
+      display: grid;
+      place-items: center;
+      margin-bottom: 30px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      color: var(--accent);
+      background: color-mix(in srgb, var(--panel-solid) 80%, transparent);
+    }
+
+    .focus-card h3 {
+      margin: 0 0 8px;
+      font-size: 22px;
+      letter-spacing: -0.025em;
+    }
+
+    .focus-card p {
+      max-width: 560px;
+      margin: 0;
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    .projects-grid {
+      display: grid;
+      gap: 24px;
+    }
+
+    .project-card {
+      display: grid;
+      grid-template-columns: minmax(300px, 0.95fr) minmax(0, 1.05fr);
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 26px;
+      background: var(--panel);
+      box-shadow: 0 18px 52px color-mix(in srgb, black 12%, transparent);
+      transition: transform 0.22s ease, border-color 0.22s ease;
+    }
+
+    .project-card:hover {
+      transform: translateY(-5px);
+      border-color: color-mix(in srgb, var(--accent-2) 45%, var(--line));
+    }
+
+    .project-card:nth-child(even) .project-media {
+      order: 2;
+    }
+
+    .project-media {
+      position: relative;
+      min-height: 350px;
+      overflow: hidden;
+      background: var(--panel-2);
+      cursor: zoom-in;
+    }
+
+    .project-media img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.55s cubic-bezier(.2,.7,.2,1);
+    }
+
+    .project-card:hover .project-media img {
+      transform: scale(1.035);
+    }
+
+    .project-media.contain img {
+      object-fit: contain;
+      padding: 12px;
+      background: #f8fafc;
+    }
+
+    .project-media::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background: linear-gradient(to top, rgba(3, 10, 20, 0.34), transparent 45%);
+    }
+
+    .project-number {
+      position: absolute;
+      left: 16px;
+      bottom: 14px;
+      z-index: 2;
+      padding: 6px 10px;
+      border: 1px solid rgba(255,255,255,0.18);
+      border-radius: 9px;
+      color: #fff;
+      background: rgba(2, 9, 18, 0.6);
+      backdrop-filter: blur(10px);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .project-content {
+      padding: clamp(26px, 4vw, 44px);
+      align-self: center;
+    }
+
+    .project-kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 12px;
+      color: var(--accent);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .project-content h3 {
+      margin: 0;
+      font-size: clamp(26px, 4vw, 38px);
+      line-height: 1.14;
+      letter-spacing: -0.035em;
+    }
+
+    .project-content p {
+      margin: 16px 0 0;
+      color: var(--muted);
+    }
+
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 22px;
+    }
+
+    .tag {
+      padding: 6px 10px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: color-mix(in srgb, var(--panel-2) 70%, transparent);
+      color: var(--muted);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+    .project-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 24px;
+    }
+
+    .project-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      color: var(--text);
+      font-size: 14px;
+      font-weight: 850;
+    }
+
+    .project-link:hover {
+      color: var(--accent);
+    }
+
+    .project-link svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    .mechanism-visual {
+      display: grid;
+      place-items: center;
+      min-height: 350px;
+      padding: 36px;
+      background:
+        radial-gradient(circle at center, color-mix(in srgb, var(--accent-2) 13%, transparent), transparent 58%),
+        var(--panel-2);
+    }
+
+    .mechanism-svg {
+      width: min(100%, 470px);
+      filter: drop-shadow(0 16px 25px rgba(0,0,0,.2));
+    }
+
+    .skills-layout {
+      display: grid;
+      grid-template-columns: 0.8fr 1.2fr;
+      gap: 24px;
+    }
+
+    .skills-intro {
+      padding: 30px;
+    }
+
+    .skills-intro h3 {
+      margin: 0 0 10px;
+      font-size: 28px;
+      letter-spacing: -0.035em;
+    }
+
+    .skills-intro p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .stack-list {
+      margin-top: 24px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .stack-line {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 12px 0;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .stack-line b {
+      color: var(--text);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 12px;
+    }
+
+    .skill-groups {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+
+    .skill-group {
+      padding: 24px;
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      background: var(--panel);
+    }
+
+    .skill-group h3 {
+      margin: 0 0 14px;
+      font-size: 17px;
+    }
+
+    .skill-cloud {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .skill {
+      padding: 7px 10px;
+      border-radius: 9px;
+      color: var(--muted);
+      background: color-mix(in srgb, var(--panel-2) 82%, transparent);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .timeline {
+      position: relative;
+      display: grid;
+      gap: 16px;
+    }
+
+    .timeline::before {
+      content: "";
+      position: absolute;
+      left: 22px;
+      top: 22px;
+      bottom: 22px;
+      width: 1px;
+      background: linear-gradient(var(--accent), var(--accent-2), var(--line));
+    }
+
+    .timeline-item {
+      position: relative;
+      display: grid;
+      grid-template-columns: 46px minmax(0, 1fr);
+      gap: 18px;
+      padding: 22px;
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      background: var(--panel);
+    }
+
+    .timeline-dot {
+      position: relative;
+      z-index: 2;
+      width: 15px;
+      height: 15px;
+      margin: 7px auto 0;
+      border: 3px solid var(--bg);
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 20%, transparent);
+    }
+
+    .timeline-item time {
+      display: block;
+      color: var(--accent);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .timeline-item h3 {
+      margin: 5px 0 3px;
+      font-size: 20px;
+    }
+
+    .timeline-item p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .publications-card {
+      padding: clamp(28px, 5vw, 52px);
+      text-align: center;
+    }
+
+    .publications-card .code-icon {
+      width: 62px;
+      height: 62px;
+      display: grid;
+      place-items: center;
+      margin: 0 auto 18px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      color: var(--accent);
+      background: var(--panel-2);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 22px;
+      font-weight: 900;
+    }
+
+    .publications-card h3 {
+      margin: 0;
+      font-size: 27px;
+    }
+
+    .publications-card p {
+      max-width: 670px;
+      margin: 12px auto 0;
+      color: var(--muted);
+    }
+
+    .contact-card {
+      position: relative;
+      overflow: hidden;
+      padding: clamp(30px, 6vw, 64px);
+      border: 1px solid var(--line);
+      border-radius: 30px;
+      background:
+        linear-gradient(135deg, color-mix(in srgb, var(--accent-2) 10%, transparent), transparent 45%),
+        linear-gradient(310deg, color-mix(in srgb, var(--accent) 10%, transparent), transparent 42%),
+        var(--panel);
+      box-shadow: var(--shadow);
+    }
+
+    .contact-card h2 {
+      max-width: 780px;
+      margin: 0;
+      font-size: clamp(38px, 7vw, 72px);
+      line-height: 1.02;
+      letter-spacing: -0.055em;
+    }
+
+    .contact-card p {
+      max-width: 650px;
+      margin: 18px 0 0;
+      color: var(--muted);
+      font-size: 17px;
+    }
+
+    .contact-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 28px;
+    }
+
+    footer {
+      padding: 30px 0 42px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .footer-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      padding-top: 24px;
+      border-top: 1px solid var(--line);
+    }
+
+    .footer-code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    }
+
+    .visitor-wrap {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .visitor-wrap img {
+      height: 20px;
+      max-width: 170px;
+    }
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 28px;
+      z-index: 500;
+      transform: translate(-50%, 28px);
+      padding: 11px 15px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--panel-solid);
+      color: var(--text);
+      box-shadow: var(--shadow);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+      font-size: 14px;
+      font-weight: 750;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translate(-50%, 0);
+    }
+
+    .lightbox {
+      position: fixed;
+      inset: 0;
+      z-index: 300;
+      display: none;
+      place-items: center;
+      padding: 24px;
+      background: rgba(2, 7, 14, 0.84);
+      backdrop-filter: blur(16px);
+    }
+
+    .lightbox.open {
+      display: grid;
+    }
+
+    .lightbox img {
+      max-width: min(1500px, 96vw);
+      max-height: 88vh;
+      border-radius: 18px;
+      box-shadow: 0 28px 100px rgba(0,0,0,.55);
+    }
+
+    .lightbox-close {
+      position: absolute;
+      right: 22px;
+      top: 20px;
+      border-color: rgba(255,255,255,.2);
+      color: white;
+      background: rgba(255,255,255,.08);
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.65s ease, transform 0.65s cubic-bezier(.2,.65,.2,1);
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: none;
+    }
+
+    html[data-lang="en"] .lang-zh,
+    html[data-lang="zh"] .lang-en {
+      display: none !important;
+    }
+
+    @media (max-width: 980px) {
+      .hero {
+        min-height: auto;
+        padding-top: 54px;
+      }
+
+      .hero-grid,
+      .about-grid,
+      .skills-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .profile-stack {
+        width: min(100%, 470px);
+        justify-self: center;
+        margin-top: 28px;
+      }
+
+      .terminal {
+        left: -16px;
+      }
+
+      .focus-card.primary-focus,
+      .focus-card.secondary-focus,
+      .focus-card.third-focus,
+      .focus-card.fourth-focus {
+        grid-column: span 6;
+      }
+
+      .project-card {
+        grid-template-columns: 1fr;
+      }
+
+      .project-card:nth-child(even) .project-media {
+        order: 0;
+      }
+
+      .project-media,
+      .mechanism-visual {
+        min-height: 310px;
+      }
+    }
+
+    @media (max-width: 800px) {
+      .menu-button {
+        display: inline-grid;
+      }
+
+      .nav-links {
+        position: fixed;
+        left: 20px;
+        right: 20px;
+        top: calc(var(--nav-h) + 10px);
+        display: none;
+        padding: 10px;
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        background: var(--panel-solid);
+        box-shadow: var(--shadow);
+      }
+
+      .nav-links.open {
+        display: grid;
+      }
+
+      .nav-link {
+        padding: 12px 14px;
+      }
+
+      .nav-link.active::after {
+        display: none;
+      }
+
+      .nav-actions {
+        margin-left: auto;
+      }
+
+      .focus-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .focus-card.primary-focus,
+      .focus-card.secondary-focus,
+      .focus-card.third-focus,
+      .focus-card.fourth-focus {
+        grid-column: auto;
+      }
+
+      .skill-groups {
+        grid-template-columns: 1fr;
+      }
+
+      .footer-inner {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+    }
+
+    @media (max-width: 600px) {
+      :root {
+        --nav-h: 64px;
+      }
+
+      .container {
+        width: min(100% - 26px, var(--max));
+      }
+
+      .site-nav {
+        height: var(--nav-h);
+      }
+
+      .brand-text {
+        display: none;
+      }
+
+      .hero {
+        padding: 44px 0 76px;
+      }
+
+      .hero-grid {
+        gap: 38px;
+      }
+
+      .hero h1 {
+        font-size: clamp(44px, 15vw, 66px);
+      }
+
+      .hero-actions .button {
+        width: 100%;
+      }
+
+      .profile-stack {
+        width: 94%;
+      }
+
+      .avatar-frame {
+        border-radius: 25px;
+      }
+
+      .terminal {
+        position: relative;
+        left: 0;
+        bottom: 0;
+        width: 96%;
+        margin: -22px auto 0;
+      }
+
+      section {
+        padding: 68px 0;
+      }
+
+      .section-heading {
+        grid-template-columns: 1fr;
+        gap: 8px;
+      }
+
+      .section-line {
+        display: none;
+      }
+
+      .project-media,
+      .mechanism-visual {
+        min-height: 245px;
+      }
+
+      .project-content {
+        padding: 24px 21px 28px;
+      }
+
+      .timeline-item {
+        grid-template-columns: 30px minmax(0, 1fr);
+        padding: 18px 16px;
+      }
+
+      .timeline::before {
+        left: 31px;
+      }
+
+      .contact-actions .button {
+        width: 100%;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        scroll-behavior: auto !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+
+      .reveal {
+        opacity: 1;
+        transform: none;
+      }
+    }
+
+    @media print {
+      .site-nav,
+      .hero-actions,
+      .contact-actions,
+      .visitor-wrap,
+      .toast,
+      .lightbox {
+        display: none !important;
+      }
+
+      body {
+        background: white;
+        color: #111;
+      }
+
+      section {
+        break-inside: avoid;
+      }
+
+      .panel,
+      .project-card,
+      .focus-card,
+      .timeline-item,
+      .skill-group {
+        box-shadow: none;
+        backdrop-filter: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <a class="skip-link" href="#main">
+    <span class="lang-en">Skip to content</span>
+    <span class="lang-zh">跳到正文</span>
+  </a>
+
+  <nav class="site-nav" aria-label="Primary navigation">
+    <div class="container nav-inner">
+      <a class="brand" href="#home" aria-label="Shouyu Lai home">
+        <span class="brand-mark">SL</span>
+        <span class="brand-text"><span>~/</span>shouyu-lai</span>
+      </a>
+
+      <div class="nav-links" id="navLinks">
+        <a class="nav-link active" href="#about">
+          <span class="lang-en">About</span><span class="lang-zh">关于我</span>
+        </a>
+        <a class="nav-link" href="#focus">
+          <span class="lang-en">Research</span><span class="lang-zh">研究方向</span>
+        </a>
+        <a class="nav-link" href="#projects">
+          <span class="lang-en">Projects</span><span class="lang-zh">项目</span>
+        </a>
+        <a class="nav-link" href="#skills">
+          <span class="lang-en">Skills</span><span class="lang-zh">技术能力</span>
+        </a>
+        <a class="nav-link" href="#education">
+          <span class="lang-en">Education</span><span class="lang-zh">教育经历</span>
+        </a>
+        <a class="nav-link" href="#contact">
+          <span class="lang-en">Contact</span><span class="lang-zh">联系</span>
+        </a>
+      </div>
+
+      <div class="nav-actions">
+        <button class="icon-button lang-button" id="langToggle" type="button" aria-label="Switch language">中</button>
+
+        <button class="icon-button" id="themeToggle" type="button" aria-label="Toggle color theme">
+          <svg id="themeIconMoon" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
+            <path d="M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8Z"/>
+          </svg>
+          <svg id="themeIconSun" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true" hidden>
+            <circle cx="12" cy="12" r="4"/>
+            <path d="M12 2v2M12 20v2M4.93 4.93l1.42 1.42M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.42-1.42M17.66 6.34l1.41-1.41"/>
+          </svg>
+        </button>
+
+        <button class="icon-button menu-button" id="menuToggle" type="button" aria-label="Open navigation menu" aria-expanded="false">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
+            <path d="M4 7h16M4 12h16M4 17h16"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <main id="main">
+    <section class="hero" id="home">
+      <div class="container hero-grid">
+        <div class="hero-copy reveal visible">
+          <div class="eyebrow">
+            <span class="status-dot" aria-hidden="true"></span>
+            <span class="lang-en">Robotics Ph.D. Student · Beihang University</span>
+            <span class="lang-zh">机器人方向博士生 · 北京航空航天大学</span>
+          </div>
+
+          <h1>
+            <span class="name">Shouyu Lai</span>
+            <span class="accent-text lang-en">Building robots that learn — and work.</span>
+            <span class="accent-text lang-zh">让机器人会学习，也真正能工作。</span>
+          </h1>
+
+          <p class="hero-intro lang-en">
+            I work at the intersection of <strong>robot control</strong>,
+            <strong>reinforcement learning</strong>, whole-body control,
+            mechanical design, and real-world robotic systems.
+          </p>
+          <p class="hero-intro lang-zh">
+            我的研究位于<strong>机器人控制</strong>、<strong>强化学习</strong>、
+            全身控制、机械设计与真实机器人系统的交叉地带。
+          </p>
+
+          <div class="hero-actions">
+            <button class="button primary copy-email" type="button" data-email="laishouyu078@gmail.com">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
+                <rect x="3" y="5" width="18" height="14" rx="2"/>
+                <path d="m3 7 9 6 9-6"/>
+              </svg>
+              <span class="lang-en">Copy email</span><span class="lang-zh">复制邮箱</span>
+            </button>
+
+            <a class="button" href="https://github.com/1aStIY" target="_blank" rel="noopener noreferrer">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
+                <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3.3-.4 6.8-1.6 6.8-7A5.5 5.5 0 0 0 19.3 4 5.1 5.1 0 0 0 19.2.5S18 0 15 2a13.4 13.4 0 0 0-7 0C5 0 3.8.5 3.8.5A5.1 5.1 0 0 0 3.7 4a5.5 5.5 0 0 0-1.5 3.8c0 5.4 3.5 6.6 6.8 7A4.8 4.8 0 0 0 8 18v4"/>
+                <path d="M8 19c-3 .9-3-1.5-4-2"/>
+              </svg>
+              GitHub
+            </a>
+
+            <a class="button" href="Shouyu_Lai_CV.pdf" download>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
+                <path d="M12 3v12M7 10l5 5 5-5M5 21h14"/>
+              </svg>
+              <span class="lang-en">Download CV</span><span class="lang-zh">下载简历</span>
+            </a>
+          </div>
+
+          <div class="hero-meta" aria-label="Profile metadata">
+            <span><b>01</b> 4573 Lab</span>
+            <span><b>02</b> Beihang University</span>
+            <span><b>03</b> China</span>
+          </div>
+        </div>
+
+        <div class="profile-stack reveal visible">
+          <div class="avatar-frame">
+            <img src="assets/avatar.webp" alt="Cartoon portrait of Shouyu Lai">
+          </div>
+
+          <div class="terminal" aria-label="Research profile terminal">
+            <div class="terminal-head">
+              <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+              <span class="terminal-title">robotics_profile.sh</span>
+            </div>
+            <div class="terminal-body">
+              <div><span class="cmd">$</span> <span class="path">whoami</span></div>
+              <div class="value">Shouyu Lai / 来首宇</div>
+              <div><span class="cmd">$</span> <span class="path">focus</span> --primary</div>
+              <div class="value">robot_control + reinforcement_learning</div>
+              <div><span class="cmd">$</span> <span class="path">platforms</span></div>
+              <div class="comment">humanoid · quadruped · UAV · reconfigurable</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="about">
+      <div class="container">
+        <div class="section-heading reveal">
+          <span class="section-index">01 / ABOUT</span>
+          <div>
+            <h2><span class="lang-en">Engineering intelligence into motion.</span><span class="lang-zh">把智能真正做进运动系统。</span></h2>
+            <div class="section-line"></div>
+          </div>
+        </div>
+
+        <div class="about-grid">
+          <article class="panel about-copy reveal">
+            <p class="lang-en">
+              I am a Ph.D. student in Artificial Intelligence at
+              <strong>Beihang University</strong>, working in the
+              <strong>4573 Laboratory</strong>. I build learning-enabled robots
+              that must operate beyond clean simulations. My work combines
+              reinforcement learning, model-based robot control, whole-body
+              control, mechanical design, and embedded system integration.
+            </p>
+            <p class="lang-zh">
+              我是北京航空航天大学人工智能方向博士生，就读于
+              <strong>4573实验室</strong>。我关注能够走出理想仿真环境、在真实系统中可靠运行的学习型机器人，
+              将强化学习、基于模型的机器人控制、全身控制、机械设计与嵌入式系统集成结合起来。
+            </p>
+
+            <p class="lang-en">
+              Robotics attracts me because equations, code, mechanisms, sensors,
+              and hardware are forced to agree on the same machine. The gap
+              between “works in simulation” and “works repeatedly on the robot”
+              is the part I find most valuable.
+            </p>
+            <p class="lang-zh">
+              机器人吸引我的地方在于：公式、代码、机构、传感器和硬件必须在同一台机器上同时成立。
+              从“仿真里能跑”到“真机上可重复运行”的差距，是我最感兴趣也最愿意投入的部分。
+            </p>
+
+            <p class="lang-en">
+              My longer-term goal is to study generalizable robot learning and
+              hybrid model-based / learning-based control across different
+              morphologies — from humanoids and quadrupeds to aerial and
+              reconfigurable robots.
+            </p>
+            <p class="lang-zh">
+              下一阶段，我希望研究更具泛化能力的机器人学习方法，以及模型控制与学习控制的融合，
+              让策略能够跨越不同形态，从人形、四足扩展到飞行机器人和可重构机器人。
+            </p>
+          </article>
+
+          <aside class="panel principles reveal">
+            <div class="principle">
+              <span class="num">01 / THINK</span>
+              <h3><span class="lang-en">Control before spectacle</span><span class="lang-zh">先把控制做稳</span></h3>
+              <p class="lang-en">Performance should remain explainable, testable, and repeatable.</p>
+              <p class="lang-zh">性能不仅要漂亮，还应当可解释、可测试、可重复。</p>
+            </div>
+
+            <div class="principle">
+              <span class="num">02 / BUILD</span>
+              <h3><span class="lang-en">Algorithms meet mechanisms</span><span class="lang-zh">算法必须遇见机构</span></h3>
+              <p class="lang-en">Co-design the policy, controller, structure, electronics, and sensing stack.</p>
+              <p class="lang-zh">策略、控制器、机械结构、电子系统与感知链路协同设计。</p>
+            </div>
+
+            <div class="principle">
+              <span class="num">03 / VERIFY</span>
+              <h3><span class="lang-en">Close the sim-to-real loop</span><span class="lang-zh">闭合仿真到现实的链路</span></h3>
+              <p class="lang-en">Use real-system failures as information, not as an afterthought.</p>
+              <p class="lang-zh">把真机失败当作重要信息，而不是项目最后的意外。</p>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section id="focus">
+      <div class="container">
+        <div class="section-heading reveal">
+          <span class="section-index">02 / RESEARCH</span>
+          <div>
+            <h2><span class="lang-en">Research focus</span><span class="lang-zh">研究方向</span></h2>
+            <div class="section-line"></div>
+          </div>
+        </div>
+
+        <div class="focus-grid">
+          <article class="focus-card primary-focus reveal">
+            <div class="focus-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="25" height="25" fill="none" stroke="currentColor">
+                <path d="M4 18V9M9 18V5M14 18v-7M19 18V3"/>
+                <path d="M3 21h18"/>
+              </svg>
+            </div>
+            <h3><span class="lang-en">Robot Control & Reinforcement Learning</span><span class="lang-zh">机器人控制与强化学习</span></h3>
+            <p class="lang-en">
+              Learning-based control, policy optimization, robust deployment,
+              sim-to-real transfer, and the integration of model knowledge with
+              data-driven policies.
+            </p>
+            <p class="lang-zh">
+              学习控制、策略优化、鲁棒部署、仿真到现实迁移，以及模型知识与数据驱动策略的融合。
+            </p>
+          </article>
+
+          <article class="focus-card secondary-focus reveal">
+            <div class="focus-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="25" height="25" fill="none" stroke="currentColor">
+                <circle cx="7" cy="17" r="2"/><circle cx="17" cy="17" r="2"/>
+                <path d="M7 15V8h10v7M9 8V5h6v3M4 12h3M17 12h3"/>
+              </svg>
+            </div>
+            <h3><span class="lang-en">Whole-Body & Legged Robotics</span><span class="lang-zh">全身控制与足式机器人</span></h3>
+            <p class="lang-en">
+              Coordinated locomotion and manipulation for humanoids, quadrupeds,
+              and quadruped manipulators, with an emphasis on whole-body behavior.
+            </p>
+            <p class="lang-zh">
+              面向人形、四足和四足机械臂系统的运动—操作协同，重点关注全身行为与控制。
+            </p>
+          </article>
+
+          <article class="focus-card third-focus reveal">
+            <div class="focus-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="25" height="25" fill="none" stroke="currentColor">
+                <path d="M12 3v18M3 12h18"/>
+                <circle cx="5" cy="5" r="2"/><circle cx="19" cy="5" r="2"/>
+                <circle cx="5" cy="19" r="2"/><circle cx="19" cy="19" r="2"/>
+                <path d="m6.5 6.5 11 11M17.5 6.5l-11 11"/>
+              </svg>
+            </div>
+            <h3><span class="lang-en">Aerial Robotics & UAV Systems</span><span class="lang-zh">飞行机器人与无人机系统</span></h3>
+            <p class="lang-en">
+              Autonomous UAV platforms, flight control, onboard AI computing,
+              LiDAR integration, long-range communication, and anti-UAV system design.
+            </p>
+            <p class="lang-zh">
+              自主无人机平台、飞行控制、机载AI计算、激光雷达集成、远距离通信与反无人机系统设计。
+            </p>
+          </article>
+
+          <article class="focus-card fourth-focus reveal">
+            <div class="focus-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="25" height="25" fill="none" stroke="currentColor">
+                <path d="M4 7h6v6H4zM14 11h6v6h-6z"/>
+                <path d="M10 10h4M7 13v4h7M17 7v4"/>
+                <circle cx="17" cy="5" r="2"/><circle cx="7" cy="19" r="2"/>
+              </svg>
+            </div>
+            <h3><span class="lang-en">Mechanical Design & Reconfigurable Robots</span><span class="lang-zh">机械设计与可重构机器人</span></h3>
+            <p class="lang-en">
+              Serial-parallel hybrid mechanisms, morphology reconfiguration,
+              mechatronic co-design, CAD, prototyping, and system-level engineering.
+            </p>
+            <p class="lang-zh">
+              串并混联机构、形态重构、机电协同设计、CAD、快速原型与系统级工程实现。
+            </p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="projects">
+      <div class="container">
+        <div class="section-heading reveal">
+          <span class="section-index">03 / PROJECTS</span>
+          <div>
+            <h2><span class="lang-en">Selected engineering work</span><span class="lang-zh">代表性工程项目</span></h2>
+            <div class="section-line"></div>
+          </div>
+        </div>
+
+        <div class="projects-grid">
+          <article class="project-card reveal">
+            <div class="project-media" data-lightbox="assets/quadruped-sim2real.webp">
+              <img src="assets/quadruped-sim2real.webp" alt="Quadruped manipulator simulation and real-world deployment">
+              <span class="project-number">P-01</span>
+            </div>
+            <div class="project-content">
+              <div class="project-kicker">RL · WBC · SIM2REAL</div>
+              <h3>
+                <span class="lang-en">Quadruped Manipulator: RL + Whole-Body Control</span>
+                <span class="lang-zh">四足机械臂：强化学习与全身控制</span>
+              </h3>
+              <p class="lang-en">
+                A simulation-to-real workflow for quadruped locomotion and
+                manipulation, using reinforcement learning together with
+                whole-body control. The system is developed and compared across
+                Isaac Lab, MuJoCo, and a real robot platform.
+              </p>
+              <p class="lang-zh">
+                面向四足机器人运动与操作协同的仿真到现实流程，将强化学习与全身控制结合，
+                并在 Isaac Lab、MuJoCo 与真实机器人平台之间进行开发和验证。
+              </p>
+              <div class="tags">
+                <span class="tag">Reinforcement Learning</span>
+                <span class="tag">Whole-Body Control</span>
+                <span class="tag">Isaac Lab</span>
+                <span class="tag">MuJoCo</span>
+                <span class="tag">Sim-to-Real</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="project-card reveal">
+            <div class="mechanism-visual">
+              <svg class="mechanism-svg" viewBox="0 0 680 420" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Abstract serial-parallel reconfigurable mechanism diagram">
+                <defs>
+                  <linearGradient id="g1" x1="80" y1="50" x2="570" y2="380" gradientUnits="userSpaceOnUse">
+                    <stop stop-color="#5EEAD4"/>
+                    <stop offset="1" stop-color="#60A5FA"/>
+                  </linearGradient>
+                  <filter id="glow" x="-60%" y="-60%" width="220%" height="220%">
+                    <feGaussianBlur stdDeviation="8" result="blur"/>
+                    <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+                  </filter>
+                </defs>
+                <path d="M130 210 245 105 410 125 540 230 420 335 250 315Z" stroke="url(#g1)" stroke-width="10" stroke-linejoin="round" opacity=".9"/>
+                <path d="m245 105 5 210M410 125l10 210M130 210l410 20M245 105l175 230M410 125 250 315" stroke="#8EA6BC" stroke-width="5" opacity=".55"/>
+                <g fill="#0F1F32" stroke="url(#g1)" stroke-width="7" filter="url(#glow)">
+                  <circle cx="130" cy="210" r="31"/>
+                  <circle cx="245" cy="105" r="31"/>
+                  <circle cx="410" cy="125" r="31"/>
+                  <circle cx="540" cy="230" r="31"/>
+                  <circle cx="420" cy="335" r="31"/>
+                  <circle cx="250" cy="315" r="31"/>
+                  <circle cx="330" cy="220" r="42"/>
+                </g>
+                <path d="M330 178v84M288 220h84" stroke="#C084FC" stroke-width="9" stroke-linecap="round"/>
+                <path d="m552 86 42 16-32 31" stroke="#5EEAD4" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M586 104c-22-36-66-54-104-38" stroke="#5EEAD4" stroke-width="6" stroke-linecap="round"/>
+                <path d="m128 336-42-16 32-31" stroke="#60A5FA" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M94 318c22 36 66 54 104 38" stroke="#60A5FA" stroke-width="6" stroke-linecap="round"/>
+              </svg>
+            </div>
+
+            <div class="project-content">
+              <div class="project-kicker">MECHANISM · RECONFIGURATION</div>
+              <h3>
+                <span class="lang-en">Serial–Parallel Hybrid Reconfigurable Robot</span>
+                <span class="lang-zh">串并混联可重构机器人</span>
+              </h3>
+              <p class="lang-en">
+                Mechanical and system design of a robot that changes its
+                configuration through a serial–parallel hybrid architecture.
+                The project emphasizes mechanism synthesis, reconfiguration,
+                actuation layout, and practical prototype implementation.
+              </p>
+              <p class="lang-zh">
+                采用串并混联架构实现构型变化的机器人机械与系统设计，重点包括机构综合、
+                重构方式、驱动布局与实体样机实现。
+              </p>
+
+              <div class="tags">
+                <span class="tag">Serial–Parallel Mechanism</span>
+                <span class="tag">Reconfigurable Robot</span>
+                <span class="tag">Mechanical Design</span>
+                <span class="tag">Prototype</span>
+              </div>
+
+              <div class="project-links">
+                <a class="project-link" href="https://www.bilibili.com/video/BV1Tr421E7EF/?share_source=copy_web&amp;vd_source=8706efd99e8be2fe57852998a1b901d8" target="_blank" rel="noopener noreferrer">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
+                    <path d="M8 3l2 3M16 3l-2 3M5 7h14a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2Z"/>
+                    <path d="M8 12v3M16 12v3"/>
+                  </svg>
+                  <span class="lang-en">Watch project video</span><span class="lang-zh">观看项目视频</span>
+                </a>
+              </div>
+            </div>
+          </article>
+
+          <article class="project-card reveal">
+            <div class="project-media contain" data-lightbox="assets/uav-jg200.webp">
+              <img src="assets/uav-jg200.webp" alt="Autonomous UAV platform and system architecture">
+              <span class="project-number">P-03</span>
+            </div>
+            <div class="project-content">
+              <div class="project-kicker">UAV · AUTONOMY · MECHATRONICS</div>
+              <h3>
+                <span class="lang-en">Autonomous UAV Platforms & Anti-UAV Systems</span>
+                <span class="lang-zh">自主无人机平台与反无人机系统</span>
+              </h3>
+              <p class="lang-en">
+                Design and integration of multiple UAV platforms, including a
+                four-camera + LiDAR platform, a dual-axis gimbal + LiDAR
+                platform, a net-capture anti-UAV system, and a signal-suppression
+                soft-kill platform. Work covers structural design, propulsion,
+                flight control, onboard computing, sensing, power, and communication.
+              </p>
+              <p class="lang-zh">
+                设计并集成多款无人机平台，包括四目相机+激光雷达平台、双轴吊舱+激光雷达平台、
+                网捕式反无人机系统以及信号压制软杀伤平台。工作覆盖结构、动力、飞控、机载计算、
+                传感器、电源与通信链路。
+              </p>
+              <div class="tags">
+                <span class="tag">UAV Design</span>
+                <span class="tag">Flight Control</span>
+                <span class="tag">LiDAR</span>
+                <span class="tag">Orin NX</span>
+                <span class="tag">Mesh Communication</span>
+                <span class="tag">System Integration</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="project-card reveal">
+            <div class="project-media contain" data-lightbox="assets/uav-platform.webp">
+              <img src="assets/uav-platform.webp" alt="Detailed aerial robot design and hardware architecture">
+              <span class="project-number">P-04</span>
+            </div>
+            <div class="project-content">
+              <div class="project-kicker">HARDWARE · EMBEDDED AI</div>
+              <h3>
+                <span class="lang-en">Compact Aerial Robot System Engineering</span>
+                <span class="lang-zh">紧凑型飞行机器人系统工程</span>
+              </h3>
+              <p class="lang-en">
+                A compact aerial robot integrating flight control, propulsion,
+                omnidirectional sensing, onboard edge AI, LiDAR-based autonomous
+                navigation, and long-range communication. The project focuses on
+                mass, power, thermal, wiring, and mechanical packaging constraints.
+              </p>
+              <p class="lang-zh">
+                在紧凑平台中集成飞行控制、动力系统、全向感知、机载边缘AI、激光雷达自主导航
+                与远距离通信，重点解决重量、供电、散热、布线和机械布局等系统约束。
+              </p>
+              <div class="tags">
+                <span class="tag">Edge AI</span>
+                <span class="tag">Autonomous Navigation</span>
+                <span class="tag">Power Architecture</span>
+                <span class="tag">Mechanical Packaging</span>
+                <span class="tag">Embedded Integration</span>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="skills">
+      <div class="container">
+        <div class="section-heading reveal">
+          <span class="section-index">04 / SKILLS</span>
+          <div>
+            <h2><span class="lang-en">Technical stack</span><span class="lang-zh">技术能力</span></h2>
+            <div class="section-line"></div>
+          </div>
+        </div>
+
+        <div class="skills-layout">
+          <article class="panel skills-intro reveal">
+            <h3><span class="lang-en">From policy to prototype.</span><span class="lang-zh">从策略到样机。</span></h3>
+            <p class="lang-en">
+              My strongest work is cross-disciplinary: connect learning and
+              control algorithms to a mechanical system, onboard computer,
+              sensors, actuators, and a repeatable test process.
+            </p>
+            <p class="lang-zh">
+              我更擅长跨学科完整链路：把学习与控制算法连接到机械系统、机载计算、
+              传感器、执行器和可重复的测试流程。
+            </p>
+
+            <div class="stack-list">
+              <div class="stack-line"><span class="lang-en">Primary</span><span class="lang-zh">核心</span><b>RL / CONTROL</b></div>
+              <div class="stack-line"><span class="lang-en">Strong</span><span class="lang-zh">擅长</span><b>SYSTEM INTEGRATION</b></div>
+              <div class="stack-line"><span class="lang-en">Engineering base</span><span class="lang-zh">工程基础</span><b>MECHANICAL DESIGN</b></div>
+              <div class="stack-line"><span class="lang-en">Current direction</span><span class="lang-zh">当前方向</span><b>EMBODIED AI</b></div>
+            </div>
+          </article>
+
+          <div class="skill-groups">
+            <article class="skill-group reveal">
+              <h3><span class="lang-en">Learning & Control</span><span class="lang-zh">学习与控制</span></h3>
+              <div class="skill-cloud">
+                <span class="skill">Reinforcement Learning</span>
+                <span class="skill">Robot Control</span>
+                <span class="skill">Whole-Body Control</span>
+                <span class="skill">Sim-to-Real</span>
+                <span class="skill">Policy Deployment</span>
+                <span class="skill">Motion Control</span>
+              </div>
+            </article>
+
+            <article class="skill-group reveal">
+              <h3><span class="lang-en">Simulation & Software</span><span class="lang-zh">仿真与软件</span></h3>
+              <div class="skill-cloud">
+                <span class="skill">Python</span>
+                <span class="skill">PyTorch</span>
+                <span class="skill">Isaac Lab</span>
+                <span class="skill">MuJoCo</span>
+                <span class="skill">Robot Simulation</span>
+                <span class="skill">Data Pipelines</span>
+              </div>
+            </article>
+
+            <article class="skill-group reveal">
+              <h3><span class="lang-en">Mechanical Engineering</span><span class="lang-zh">机械工程</span></h3>
+              <div class="skill-cloud">
+                <span class="skill">Mechanical Design</span>
+                <span class="skill">CAD & Prototyping</span>
+                <span class="skill">Mechanism Design</span>
+                <span class="skill">Serial–Parallel Robots</span>
+                <span class="skill">Reconfigurable Systems</span>
+                <span class="skill">Mechatronic Co-design</span>
+              </div>
+            </article>
+
+            <article class="skill-group reveal">
+              <h3><span class="lang-en">Robot Systems</span><span class="lang-zh">机器人系统</span></h3>
+              <div class="skill-cloud">
+                <span class="skill">UAV Integration</span>
+                <span class="skill">Flight Control</span>
+                <span class="skill">Embedded AI / Orin NX</span>
+                <span class="skill">LiDAR Integration</span>
+                <span class="skill">Power Systems</span>
+                <span class="skill">Mesh Communication</span>
+              </div>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="education">
+      <div class="container">
+        <div class="section-heading reveal">
+          <span class="section-index">05 / EDUCATION</span>
+          <div>
+            <h2><span class="lang-en">Education</span><span class="lang-zh">教育经历</span></h2>
+            <div class="section-line"></div>
+          </div>
+        </div>
+
+        <div class="timeline">
+          <article class="timeline-item reveal">
+            <div class="timeline-dot" aria-hidden="true"></div>
+            <div>
+              <time>2024 — PRESENT</time>
+              <h3>
+                <span class="lang-en">Ph.D. Student in Artificial Intelligence</span>
+                <span class="lang-zh">人工智能方向博士生</span>
+              </h3>
+              <p>
+                <span class="lang-en">Beihang University · 4573 Laboratory · transferred from the master's program</span>
+                <span class="lang-zh">北京航空航天大学 · 4573实验室 · 硕转博</span>
+              </p>
+            </div>
+          </article>
+
+          <article class="timeline-item reveal">
+            <div class="timeline-dot" aria-hidden="true"></div>
+            <div>
+              <time>2022 — 2024</time>
+              <h3>
+                <span class="lang-en">Master's Studies in Mechanical Engineering and Automation</span>
+                <span class="lang-zh">机械工程及其自动化 · 硕士阶段</span>
+              </h3>
+              <p><span class="lang-en">Beihang University</span><span class="lang-zh">北京航空航天大学</span></p>
+            </div>
+          </article>
+
+          <article class="timeline-item reveal">
+            <div class="timeline-dot" aria-hidden="true"></div>
+            <div>
+              <time>2018 — 2022</time>
+              <h3>
+                <span class="lang-en">B.Eng. in Mechanical Engineering and Automation</span>
+                <span class="lang-zh">机械工程及其自动化 · 工学学士</span>
+              </h3>
+              <p><span class="lang-en">Harbin Engineering University</span><span class="lang-zh">哈尔滨工程大学</span></p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="publications">
+      <div class="container">
+        <div class="section-heading reveal">
+          <span class="section-index">06 / PUBLICATIONS</span>
+          <div>
+            <h2><span class="lang-en">Publications</span><span class="lang-zh">论文与成果</span></h2>
+            <div class="section-line"></div>
+          </div>
+        </div>
+
+        <article class="panel publications-card reveal">
+          <div class="code-icon">&gt;_</div>
+          <h3>
+            <span class="lang-en">Research in progress.</span>
+            <span class="lang-zh">研究正在进行中。</span>
+          </h3>
+          <p class="lang-en">
+            No public papers are listed yet. Current work is focused on building,
+            validating, and documenting real robotic systems. Publications,
+            preprints, code, and project reports will be added here when available.
+          </p>
+          <p class="lang-zh">
+            目前暂无公开论文。现阶段重点是搭建、验证并系统记录真实机器人系统。
+            后续公开的论文、预印本、代码与项目报告会在这里更新。
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <section id="contact">
+      <div class="container">
+        <article class="contact-card reveal">
+          <h2>
+            <span class="lang-en">Let’s build something that survives reality.</span>
+            <span class="lang-zh">一起做能经得住现实检验的机器人。</span>
+          </h2>
+
+          <p class="lang-en">
+            For academic communication, robotics collaboration, or engineering
+            discussion, contact me by email. My name and public email are shown
+            here for conference and academic profile verification.
+          </p>
+          <p class="lang-zh">
+            欢迎就学术交流、机器人合作或工程问题与我联系。此处公开展示姓名与邮箱，
+            也用于会议注册和学术身份验证。
+          </p>
+
+          <div class="contact-actions">
+            <a class="button primary" href="mailto:laishouyu078@gmail.com">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
+                <rect x="3" y="5" width="18" height="14" rx="2"/>
+                <path d="m3 7 9 6 9-6"/>
+              </svg>
+              laishouyu078@gmail.com
+            </a>
+
+            <button class="button copy-email" type="button" data-email="laishouyu078@gmail.com">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
+                <rect x="9" y="9" width="11" height="11" rx="2"/>
+                <path d="M15 9V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h3"/>
+              </svg>
+              <span class="lang-en">Copy address</span><span class="lang-zh">复制地址</span>
+            </button>
+
+            <a class="button" href="https://github.com/1aStIY" target="_blank" rel="noopener noreferrer">
+              GitHub / 1aStIY
+            </a>
+          </div>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-inner">
+      <div>
+        <div class="footer-code">© <span id="year"></span> Shouyu Lai / 来首宇</div>
+        <div>
+          <span class="lang-en">Designed as a lightweight, dependency-free GitHub Pages site.</span>
+          <span class="lang-zh">轻量、无框架依赖，可直接部署到 GitHub Pages。</span>
+        </div>
+      </div>
+
+      <div class="visitor-wrap" aria-label="Visitor count">
+        <span class="lang-en">Page count</span>
+        <span class="lang-zh">访问统计</span>
+        <img
+          src="https://visitor-badge.laobi.icu/badge?page_id=1aStIY.1aStIY.github.io&amp;left_text=visitors"
+          alt="Visitor count"
+          loading="lazy"
+          onerror="this.style.display='none'">
+      </div>
+    </div>
+  </footer>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Project image preview">
+    <button class="icon-button lightbox-close" id="lightboxClose" type="button" aria-label="Close image preview">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
+        <path d="M6 6l12 12M18 6 6 18"/>
+      </svg>
+    </button>
+    <img id="lightboxImage" src="" alt="">
+  </div>
+
+  <script>
+    (() => {
+      const html = document.documentElement;
+      const themeToggle = document.getElementById("themeToggle");
+      const moon = document.getElementById("themeIconMoon");
+      const sun = document.getElementById("themeIconSun");
+      const langToggle = document.getElementById("langToggle");
+      const menuToggle = document.getElementById("menuToggle");
+      const navLinks = document.getElementById("navLinks");
+      const toast = document.getElementById("toast");
+
+      const savedTheme = localStorage.getItem("shouyu-theme");
+      const systemLight = window.matchMedia("(prefers-color-scheme: light)").matches;
+      const initialTheme = savedTheme || (systemLight ? "light" : "dark");
+      setTheme(initialTheme);
+
+      const savedLang = localStorage.getItem("shouyu-lang");
+      const initialLang = savedLang || (navigator.language.toLowerCase().startsWith("zh") ? "zh" : "en");
+      setLanguage(initialLang);
+
+      document.getElementById("year").textContent = new Date().getFullYear();
+
+      function setTheme(theme) {
+        html.dataset.theme = theme;
+        localStorage.setItem("shouyu-theme", theme);
+        const isDark = theme === "dark";
+        moon.hidden = isDark;
+        sun.hidden = !isDark;
+        document.querySelector('meta[name="theme-color"]').setAttribute(
+          "content",
+          isDark ? "#07111f" : "#f3f7fb"
+        );
+      }
+
+      function setLanguage(lang) {
+        html.dataset.lang = lang;
+        html.lang = lang === "zh" ? "zh-CN" : "en";
+        langToggle.textContent = lang === "en" ? "中" : "EN";
+        langToggle.setAttribute(
+          "aria-label",
+          lang === "en" ? "切换到中文" : "Switch to English"
+        );
+        localStorage.setItem("shouyu-lang", lang);
+      }
+
+      themeToggle.addEventListener("click", () => {
+        setTheme(html.dataset.theme === "dark" ? "light" : "dark");
+      });
+
+      langToggle.addEventListener("click", () => {
+        setLanguage(html.dataset.lang === "en" ? "zh" : "en");
+      });
+
+      menuToggle.addEventListener("click", () => {
+        const open = navLinks.classList.toggle("open");
+        menuToggle.setAttribute("aria-expanded", String(open));
+      });
+
+      navLinks.querySelectorAll("a").forEach(link => {
+        link.addEventListener("click", () => {
+          navLinks.classList.remove("open");
+          menuToggle.setAttribute("aria-expanded", "false");
+        });
+      });
+
+      document.querySelectorAll(".copy-email").forEach(button => {
+        button.addEventListener("click", async () => {
+          const email = button.dataset.email;
+          try {
+            await navigator.clipboard.writeText(email);
+            showToast(
+              html.dataset.lang === "zh"
+                ? "邮箱已复制：" + email
+                : "Email copied: " + email
+            );
+          } catch {
+            const area = document.createElement("textarea");
+            area.value = email;
+            area.style.position = "fixed";
+            area.style.opacity = "0";
+            document.body.appendChild(area);
+            area.select();
+            document.execCommand("copy");
+            area.remove();
+            showToast(
+              html.dataset.lang === "zh"
+                ? "邮箱已复制：" + email
+                : "Email copied: " + email
+            );
+          }
+        });
+      });
+
+      let toastTimer;
+      function showToast(message) {
+        clearTimeout(toastTimer);
+        toast.textContent = message;
+        toast.classList.add("show");
+        toastTimer = setTimeout(() => toast.classList.remove("show"), 2200);
+      }
+
+      const revealObserver = new IntersectionObserver(
+        entries => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("visible");
+              revealObserver.unobserve(entry.target);
+            }
+          });
+        },
+        { threshold: 0.12 }
+      );
+
+      document.querySelectorAll(".reveal:not(.visible)").forEach(el => {
+        revealObserver.observe(el);
+      });
+
+      const sections = [...document.querySelectorAll("main section[id]")];
+      const navAnchors = [...document.querySelectorAll(".nav-link")];
+
+      const sectionObserver = new IntersectionObserver(
+        entries => {
+          const visible = entries
+            .filter(entry => entry.isIntersecting)
+            .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+
+          if (!visible) return;
+          const id = visible.target.id;
+
+          navAnchors.forEach(link => {
+            link.classList.toggle(
+              "active",
+              link.getAttribute("href") === "#" + id
+            );
+          });
+        },
+        { rootMargin: "-35% 0px -55% 0px", threshold: [0.01, 0.2, 0.5] }
+      );
+
+      sections.forEach(section => sectionObserver.observe(section));
+
+      const lightbox = document.getElementById("lightbox");
+      const lightboxImage = document.getElementById("lightboxImage");
+      const lightboxClose = document.getElementById("lightboxClose");
+
+      function closeLightbox() {
+        lightbox.classList.remove("open");
+        lightboxImage.src = "";
+        document.body.style.overflow = "";
+      }
+
+      document.querySelectorAll("[data-lightbox]").forEach(media => {
+        media.setAttribute("tabindex", "0");
+        media.setAttribute("role", "button");
+
+        const open = () => {
+          const image = media.querySelector("img");
+          lightboxImage.src = media.dataset.lightbox;
+          lightboxImage.alt = image ? image.alt : "Project image";
+          lightbox.classList.add("open");
+          document.body.style.overflow = "hidden";
+          lightboxClose.focus();
+        };
+
+        media.addEventListener("click", open);
+        media.addEventListener("keydown", event => {
+          if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
+            open();
+          }
+        });
+      });
+
+      lightboxClose.addEventListener("click", closeLightbox);
+      lightbox.addEventListener("click", event => {
+        if (event.target === lightbox) closeLightbox();
+      });
+      window.addEventListener("keydown", event => {
+        if (event.key === "Escape" && lightbox.classList.contains("open")) {
+          closeLightbox();
+        }
+      });
+    })();
+  </script>
+</body>
+</html>
