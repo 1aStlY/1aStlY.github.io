@@ -3,11 +3,7 @@
 <head>
   <meta charset="utf-8">
   <script>
-    document.documentElement.classList.add("is-loading");
-    window.__loaderFailsafe = window.setTimeout(() => {
-      document.documentElement.classList.remove("is-loading");
-      document.documentElement.classList.add("is-ready");
-    }, 4200);
+    document.documentElement.classList.add("mode-pending");
   </script>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="color-scheme" content="light dark">
@@ -20,22 +16,84 @@
   <meta property="og:image" content="assets/avatar.webp">
   <title>Shouyu Lai | Robotics & Reinforcement Learning</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='18' fill='%23121624'/%3E%3Cpath d='M15 15h11v24h23v10H15z' fill='%237ee8fa'/%3E%3C/svg%3E">
-  <link rel="preload" href="styles.css?v=5.0.0" as="style">
-  <link rel="preload" href="assets/avatar.webp?v=5.0.0" as="image" type="image/webp" fetchpriority="high">
-  <link rel="preload" href="app.js?v=5.0.0" as="script">
-  <link rel="stylesheet" href="styles.css?v=5.0.0">
+  <link rel="preload" href="styles.css?v=6.0.0" as="style">
+  <link rel="preload" href="assets/avatar.webp?v=6.0.0" as="image" type="image/webp" fetchpriority="high">
+  <link rel="preload" href="app.js?v=6.0.0" as="script">
+  <link rel="stylesheet" href="styles.css?v=6.0.0">
 </head>
 <body>
-  <div class="page-loader" id="pageLoader" role="status" aria-live="polite" aria-label="Loading page">
-    <div class="loader-card">
-      <div class="loader-mark" aria-hidden="true">SL</div>
-      <div class="loader-copy">
-        <strong><span class="zh">正在准备机器人系统</span><span class="en">Preparing robotic systems</span></strong>
-        <span><span class="zh">加载首屏资源与交互效果</span><span class="en">Loading critical visuals and interactions</span></span>
+  <div class="mode-gate" id="modeGate" role="dialog" aria-modal="true" aria-labelledby="modeTitle">
+    <div class="mode-shell">
+      <div class="mode-brand" aria-hidden="true">SL</div>
+
+      <div class="mode-intro">
+        <p class="mode-kicker">SHOUYU LAI · PERSONAL SITE</p>
+        <h1 id="modeTitle">
+          <span class="zh">选择浏览模式</span>
+          <span class="en">Choose a viewing mode</span>
+        </h1>
+        <p>
+          <span class="zh">内容完全相同，只调整视觉效果和运行负载。之后可以从顶部导航栏随时切换。</span>
+          <span class="en">Both modes contain the same content. Only visual effects and rendering load change. You can switch later from the top bar.</span>
+        </p>
       </div>
-      <div class="loader-track" aria-hidden="true"><i></i></div>
+
+      <div class="mode-options">
+        <button class="mode-option mode-full" type="button" data-mode="full">
+          <span class="mode-recommend">
+            <span class="zh">推荐</span><span class="en">Recommended</span>
+          </span>
+          <span class="mode-icon mode-icon-full" aria-hidden="true">
+            <i></i><i></i><i></i>
+          </span>
+          <span class="mode-option-copy">
+            <strong><span class="zh">全量模式</span><span class="en">Full mode</span></strong>
+            <small>
+              <span class="zh">实时液态玻璃、背景模糊、方向拉伸与动态光效。适合性能较好的电脑。</span>
+              <span class="en">Live liquid glass, backdrop blur, directional stretching and animated lighting. Best on a capable desktop.</span>
+            </small>
+          </span>
+          <span class="mode-spec">
+            <span>SVG filters</span><span>Motion</span><span>GPU</span>
+          </span>
+        </button>
+
+        <button class="mode-option mode-lite" type="button" data-mode="lite">
+          <span class="mode-recommend">
+            <span class="zh">推荐</span><span class="en">Recommended</span>
+          </span>
+          <span class="mode-icon mode-icon-lite" aria-hidden="true">
+            <i></i><i></i>
+          </span>
+          <span class="mode-option-copy">
+            <strong><span class="zh">精简模式</span><span class="en">Lite mode</span></strong>
+            <small>
+              <span class="zh">关闭实时折射、卡片拉伸和动态背景，保留完整布局与内容。适合手机和低功耗设备。</span>
+              <span class="en">Disables live refraction, card stretching and animated backgrounds while keeping the complete layout and content.</span>
+            </small>
+          </span>
+          <span class="mode-spec">
+            <span>Static UI</span><span>Low power</span><span>Fast</span>
+          </span>
+        </button>
+      </div>
+
+      <div class="mode-footer">
+        <label class="remember-mode">
+          <input id="rememberMode" type="checkbox" checked>
+          <span>
+            <span class="zh">记住我的选择</span>
+            <span class="en">Remember my choice</span>
+          </span>
+        </label>
+        <p>
+          <span class="zh">精简模式不是删减版，只会关闭高开销视觉特效。</span>
+          <span class="en">Lite mode does not remove content; it only turns off expensive visual effects.</span>
+        </p>
+      </div>
     </div>
   </div>
+
   <a class="skip" href="#main"><span class="zh">跳到正文</span><span class="en">Skip to content</span></a>
 
   <div class="ambient" aria-hidden="true">
@@ -56,6 +114,9 @@
         <a href="#contact"><span class="zh">联系</span><span class="en">Contact</span></a>
       </div>
       <div class="toolbar">
+        <button class="round-btn performance-btn" id="performanceBtn" type="button" aria-label="Choose performance mode">
+          <span id="performanceLabel">MODE</span>
+        </button>
         <button class="round-btn lang-btn" id="langBtn" type="button" aria-label="Switch language">EN</button>
         <button class="round-btn" id="themeBtn" type="button" aria-label="Toggle theme">
           <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8Z"/></svg>
@@ -100,7 +161,7 @@
 
         <div class="hero-visual reveal">
           <div class="portrait-card glass glass-strong" data-liquid>
-            <img src="assets/avatar.webp?v=5.0.0" alt="Cartoon portrait of Shouyu Lai" loading="eager" decoding="async" fetchpriority="high" data-critical-image>
+            <img src="assets/avatar.webp?v=6.0.0" alt="Cartoon portrait of Shouyu Lai" loading="eager" decoding="async" fetchpriority="high" data-critical-image>
             <div class="portrait-caption">
               <div><strong>Shouyu Lai</strong><span>来首宇</span></div>
               <span class="online"><i></i> 4573 Lab</span>
@@ -193,7 +254,7 @@
         <header class="section-head reveal"><span>03</span><div><p>PROJECTS</p><h2 class="zh">代表性工程项目</h2><h2 class="en">Selected engineering work</h2></div></header>
         <div class="projects">
           <article class="project glass reveal">
-            <button class="project-image" data-lightbox="assets/quadruped.webp" aria-label="Open quadruped project image"><img src="assets/quadruped.webp?v=5.0.0" alt="Quadruped manipulator simulation and real deployment" loading="lazy" decoding="async" width="1600" height="900"></button>
+            <button class="project-image" data-lightbox="assets/quadruped.webp" aria-label="Open quadruped project image"><img src="assets/quadruped.webp?v=6.0.0" alt="Quadruped manipulator simulation and real deployment" loading="lazy" decoding="async" width="1600" height="900"></button>
             <div class="project-copy"><span class="project-no">01 / RL · WBC · SIM2REAL</span><h3 class="zh">四足机械臂：强化学习与全身控制</h3><h3 class="en">Quadruped Manipulator: RL + Whole-Body Control</h3><p class="zh">面向四足机器人运动与操作协同的仿真到现实流程，将强化学习与全身控制结合，并在 Isaac Lab、MuJoCo 与真实机器人平台之间进行开发和验证。</p><p class="en">A simulation-to-real workflow for quadruped locomotion and manipulation, combining reinforcement learning and whole-body control across Isaac Lab, MuJoCo and a real robot.</p><div class="tags"><span>Reinforcement Learning</span><span>Whole-Body Control</span><span>Isaac Lab</span><span>MuJoCo</span><span>Sim-to-Real</span></div></div>
           </article>
 
@@ -205,12 +266,12 @@
           </article>
 
           <article class="project glass reveal">
-            <button class="project-image contain" data-lightbox="assets/uav-jg200.webp" aria-label="Open UAV project image"><img src="assets/uav-jg200.webp?v=5.0.0" alt="Autonomous UAV platform and system architecture" loading="lazy" decoding="async" width="1600" height="900"></button>
+            <button class="project-image contain" data-lightbox="assets/uav-jg200.webp" aria-label="Open UAV project image"><img src="assets/uav-jg200.webp?v=6.0.0" alt="Autonomous UAV platform and system architecture" loading="lazy" decoding="async" width="1600" height="900"></button>
             <div class="project-copy"><span class="project-no">03 / UAV · AUTONOMY · MECHATRONICS</span><h3 class="zh">自主无人机平台与反无人机系统</h3><h3 class="en">Autonomous UAV Platforms & Anti-UAV Systems</h3><p class="zh">设计并集成四目相机+激光雷达、双轴吊舱+激光雷达、网捕式反无人机以及信号压制软杀伤等平台，覆盖结构、动力、飞控、机载计算、传感、电源与通信链路。</p><p class="en">Design and integration of multi-camera/LiDAR UAVs, gimbal/LiDAR platforms, net-capture anti-UAV systems and signal-suppression platforms, covering structure, propulsion, flight control, onboard computing, sensing, power and communication.</p><div class="tags"><span>UAV Design</span><span>Flight Control</span><span>LiDAR</span><span>Orin NX</span><span>Mesh Communication</span></div></div>
           </article>
 
           <article class="project glass reveal reverse">
-            <button class="project-image contain" data-lightbox="assets/uav-system.webp" aria-label="Open compact UAV system image"><img src="assets/uav-system.webp?v=5.0.0" alt="Compact aerial robot design and hardware architecture" loading="lazy" decoding="async" width="1600" height="900"></button>
+            <button class="project-image contain" data-lightbox="assets/uav-system.webp" aria-label="Open compact UAV system image"><img src="assets/uav-system.webp?v=6.0.0" alt="Compact aerial robot design and hardware architecture" loading="lazy" decoding="async" width="1600" height="900"></button>
             <div class="project-copy"><span class="project-no">04 / HARDWARE · EMBEDDED AI</span><h3 class="zh">紧凑型飞行机器人系统工程</h3><h3 class="en">Compact Aerial Robot System Engineering</h3><p class="zh">在紧凑平台中集成飞行控制、动力、全向感知、机载边缘AI、激光雷达自主导航与远距离通信，重点解决重量、供电、散热、布线和机械布局。</p><p class="en">A compact aerial robot integrating flight control, propulsion, omnidirectional sensing, edge AI, LiDAR navigation and long-range communication under mass, power, thermal, wiring and packaging constraints.</p><div class="tags"><span>Edge AI</span><span>Autonomous Navigation</span><span>Power Architecture</span><span>Mechanical Packaging</span></div></div>
           </article>
         </div>
@@ -224,7 +285,7 @@
           <article class="glass skill-summary reveal">
             <h3 class="zh">广度不是替代深度，而是为了把系统接起来。</h3>
             <h3 class="en">Breadth does not replace depth; it helps connect the system.</h3>
-            <p class="zh">我不是每个方向的专家。我的优势是能理解机械、电气、嵌入式、控制和学习算法之间的接口与权衡，并借助大量真机调试经验，快速定位跨模块问题、协同不同角色推进整机开发。</p>
+            <p class="zh">我不把自己包装成每个方向的专家。我的优势是能理解机械、电气、嵌入式、控制和学习算法之间的接口与权衡，并借助大量真机调试经验，快速定位跨模块问题、协同不同角色推进整机开发。</p>
             <p class="en">I do not present myself as an expert in every field. My strength is understanding the interfaces and trade-offs between mechanics, electronics, embedded systems, control and learning, then using extensive hardware debugging experience to locate cross-module problems and help teams move the complete system forward.</p>
             <dl>
               <div><dt>PRIMARY</dt><dd>ROBOT CONTROL / RL</dd></div>
@@ -265,8 +326,8 @@
       <div class="container">
         <article class="contact-card glass glass-strong reveal" data-liquid>
           <p class="eyebrow">CONTACT</p>
-          <h2 class="zh">聊聊机器人，或者一起做点有趣的事。</h2>
-          <h2 class="en">Let’s talk robots — or do something a little interesting together.</h2>
+          <h2 class="zh">把不同环节接成一个能工作的系统。</h2>
+          <h2 class="en">Connect the pieces into a system that works.</h2>
           <p class="zh">如果项目需要在结构、电气、控制和学习算法之间做沟通与系统集成，欢迎交流。我仍在持续补足各方向的深度，但愿意以真机问题为中心，和不同专业的人一起把整套系统做出来。</p>
           <p class="en">If a project needs coordination and system integration across mechanics, electronics, control and learning, I would be glad to talk. I am still building deeper expertise in each area, but I enjoy working around real hardware problems with people from different disciplines to make the complete system function.</p>
           <div class="hero-actions"><a class="apple-btn primary" href="mailto:laishouyu078@gmail.com">laishouyu078@gmail.com</a><button class="apple-btn copy-email" data-email="laishouyu078@gmail.com" type="button"><span class="zh">复制地址</span><span class="en">Copy address</span></button><a class="apple-btn" href="https://github.com/1aStlY" target="_blank" rel="noopener noreferrer">GitHub / 1aStlY</a></div>
@@ -279,8 +340,6 @@
 
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
   <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Project image preview"><button id="closeLightbox" class="round-btn" type="button" aria-label="Close preview">×</button><img id="lightboxImg" alt=""></div>
-
-  <script src="liquid-glass.js?v=5.0.0" defer></script>
-  <script src="app.js?v=5.0.0" defer></script>
+  <script src="app.js?v=6.0.0" defer></script>
 </body>
 </html>

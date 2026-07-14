@@ -1,25 +1,39 @@
-# Shouyu Lai — Apple Liquid Glass Homepage V4
+# Shouyu Lai Personal Homepage V6
 
-This package contains the complete GitHub Pages site.
+This version replaces the loading screen with a performance-mode selection page.
 
-## V4 changes
+## Modes
 
-- Native pointer remains unchanged
-- Critical CSS and the hero avatar are preloaded
-- A short loading cover prevents first-frame popping and delays heavy effects
-- Project images use lazy loading and asynchronous decoding
-- SVG liquid refraction is initialized lazily near the viewport
-- The fixed title bar keeps real-time Gaussian backdrop blur
-- The title bar now expands strongly toward the pointer and shows a moving optical focus lobe
-- CSS, JavaScript, and images use `?v=4.0.0` cache-busting parameters
+### Full mode
 
-## Upload to GitHub Pages
+- Live SVG liquid-glass refraction
+- Real-time Gaussian backdrop blur
+- Directional card stretching
+- Directional top-bar flow
+- Animated ambient lighting
+- Scroll reveal animations
 
-Upload every file and the entire `assets` folder to the root of:
+### Lite mode
+
+- Same page content and layout
+- No SVG displacement filters
+- No backdrop blur
+- No directional stretching
+- No animated ambient background
+- No scroll reveal animation
+- Reduced shadows and hover work
+
+The site recommends Lite mode on phones, reduced-motion devices, and devices reporting 4 GB of memory or less.
+
+The user's selection can be remembered. A mode button in the top navigation bar allows switching later. Switching between active modes reloads the page so all filters and observers are cleanly removed or initialized.
+
+## Deploy
+
+Upload every file in this folder to the root of:
 
 `1aStlY/1aStlY.github.io`
 
-The repository root should contain:
+Required root files:
 
 - `index.html`
 - `styles.css`
@@ -28,16 +42,4 @@ The repository root should contain:
 - `Shouyu_Lai_CV.pdf`
 - `assets/`
 
-After deployment, use `Ctrl + F5` once to bypass any older browser cache.
-
-
-## V5 changes
-
-- The four About cards now use a 2 × 2 layout on desktop and tablet.
-- Public-facing copy now emphasizes broad, system-level robotics experience:
-  mechanical design, electrical/embedded integration, control, reinforcement
-  learning, diffusion models, multi-robot systems, and hardware debugging.
-- The wording explicitly avoids claiming expert-level mastery of every area.
-- Research, skills, first-screen summary, and contact copy use the same
-  modest system-integration positioning.
-- Asset URLs use `v=5.0.0` to avoid old browser caches.
+Asset cache version: `v=6.0.0`
